@@ -1,0 +1,15 @@
+<FilesMatch ".*\.(log|ini|htaccess)$">
+    deny from all
+</FilesMatch>
+
+Options -Indexes
+DirectoryIndex index.php
+RewriteEngine On
+RewriteBase /
+FallbackResource "index.php"
+
+RewriteRule ^(public)($|/) - [L,NC]
+RewriteRule ^(.*)/(.*)/(.*)$ index.php?modulo=$1&accion=$2&$3 [L,QSA]
+RewriteRule ^(.*)/(.*)$ index.php?modulo=$1&accion=$2 [L,QSA]
+RewriteRule ^(.*)$ index.php?modulo=$1&accion=inicio [L,QSA]
+
