@@ -2,4 +2,4 @@ phpinfo.php
 .idea*
 .visual
 
-common/entorno.php
+config/entorno.php
