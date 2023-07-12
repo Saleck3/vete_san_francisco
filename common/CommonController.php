@@ -6,9 +6,12 @@ class CommonController
 {
     protected CommonView $view;
     protected CommonModel $model;
+    protected Logger $logger;
 
     public function __construct()
     {
+        $this->logger = new Logger();
+
         if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), _PAGINAS_PERMITIDAS_SIN_LOGIN)) {
             $this->redireccionarAInicio();
         }
@@ -45,7 +48,7 @@ class CommonController
      */
     public function esAdmin(): bool
     {
-        $_SESSION["rol"]="admin";//TODO Reemplazar cuando se haga el login
+        $_SESSION["rol"] = "admin";//TODO Reemplazar cuando se haga el login
         return $_SESSION["rol"] == _ROL_ADMIN;
     }
 
@@ -74,8 +77,9 @@ class CommonController
         return new CommonModel();
     }
 
-    public function info(){
-        if($this->esAdmin()){
+    public function info()
+    {
+        if ($this->esAdmin()) {
             phpinfo();
             die();
         }

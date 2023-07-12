@@ -19,6 +19,7 @@ $accion = _ACCION;
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonController.php" );
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonModel.php" );
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonView.php" );
+require_once($_SERVER["DOCUMENT_ROOT"] . "/common/Logger.php" );
 
 if (file_exists($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php")) {
     require_once($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php");
