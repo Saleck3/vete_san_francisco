@@ -85,19 +85,7 @@ class CommonModel
 
     public function insertar(string $tabla, array $datos)
     {
-        if (sizeof($datos) == 1) {
-            $campos = implode(",", array_keys($datos));
-            var_dump($campos);
-            $sql = "INSERT INTO $tabla ($campos)  VALUES (" . implode(" ,", $datos[0]) . ")";
-        }
 
-        try {
-            $res = $this->db->exec($sql);
-        } catch (PDOException $e) {
-            echo $sql . "<br>" . $e->getMessage();
-        }
-
-        return $res;
 
     }
 
