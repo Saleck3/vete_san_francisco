@@ -6,9 +6,4 @@ class CommonView
     {
     }
 
-    public function inicio(): void
-    {
-        echo "Bienvenido a la vete! No estas logueado";
-    }
-
 }

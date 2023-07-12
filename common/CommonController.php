@@ -9,7 +9,7 @@ class CommonController
 
     public function __construct()
     {
-        if (!$this->estaLogueado() && !in_array(mb_strtolower(_MODULO), _PAGINAS_PERMITIDAS_SIN_LOGIN)) {
+        if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), _PAGINAS_PERMITIDAS_SIN_LOGIN)) {
             $this->redireccionarAInicio();
         }
         $this->model = $this->createModel();
@@ -23,7 +23,7 @@ class CommonController
      */
     public function estaLogueado(): bool
     {
-        return false;
+        return true;//TODO Reemplazar cuando se haga el login
     }
 
     /**
@@ -41,10 +41,12 @@ class CommonController
     /**
      * Valida si un usuario es administrador
      *
+     * @return bool
      */
     public function esAdmin(): bool
     {
-        return $_SESSION["admin"] == _ROL_ADMIN;
+        $_SESSION["rol"]="admin";//TODO Reemplazar cuando se haga el login
+        return $_SESSION["rol"] == _ROL_ADMIN;
     }
 
     /**
@@ -54,8 +56,8 @@ class CommonController
      */
     private function createView(): CommonView
     {
-        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . _MODULO . "/" . _MODULO . "View.php")) {
-            require_once($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . _MODULO . "/" . _MODULO . "View.php");
+        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . strtolower(_MODULO) . "/" . _MODULO . "View.php")) {
+            require_once($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . strtolower(_MODULO) . "/" . _MODULO . "View.php");
             $vista = _MODULO . "View";
             return new $vista();
         }
@@ -64,12 +66,20 @@ class CommonController
 
     private function createModel()
     {
-        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . _MODULO . "/" . _MODULO . "Model.php")) {
-            require_once($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . _MODULO . "/" . _MODULO . "Model.php");
-            $vista = _MODULO . "Model";
-            return new $vista();
+        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . strtolower(_MODULO) . "/" . _MODULO . "Model.php")) {
+            require_once($_SERVER["DOCUMENT_ROOT"] . "/secciones/" . strtolower(_MODULO) . "/" . _MODULO . "Model.php");
+            $model = _MODULO . "Model";
+            return new $model();
         }
         return new CommonModel();
+    }
+
+    public function info(){
+        if($this->esAdmin()){
+            phpinfo();
+            die();
+        }
+        $this->inicio();
     }
 
 

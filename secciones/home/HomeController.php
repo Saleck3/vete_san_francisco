@@ -21,12 +21,12 @@ class HomeController extends CommonController
 
     public function homeLogueado()
     {
-        echo "homeLogueado";
+
         if (!$this->estaLogueado()) {
             $this->inicio();
 
         } else {
-            echo "Estas Logueado";
+            echo "Estas logueado! <br>";
         }
     }
 }
