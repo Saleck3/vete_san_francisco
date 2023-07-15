@@ -83,13 +83,210 @@ class CommonModel
 
     }
 
-    public function insertar(string $tabla, array $datos)
+
+    /**
+     * Agrega un registro en una tabla. Si llega onDuplicateKey, entonces actualiza el registro, si es que ya existe en la base de datos.
+     * Si agrega un registro, devuelve el id del registro agregado.
+     * Si actualiza un registro, devuelve la cantidad de filas afectadas.
+     * Si no se realizaron cambios, devuelve 0.
+     * Si ocurrieron errores, devuelve false.
+     *
+     * @param string $tabla
+     * @param array $datos
+     * @param boolean $onDuplicateKey (true|false)
+     * @return integer|false (false en caso de error)
+     * @throws Exception
+     * @example insert("noticias",array("denominacion"=>"Noticia","copete"=>"Copete"));
+     */
+    public function insertar(string $tabla, array &$datos, bool $onDuplicateKey = false): bool|int
     {
 
+        // Creo la consulta SQL
+        $query = "INSERT  INTO `{$tabla}`";
+        $query .= $this->camposInsertar($datos);
+        // obtengo datos y posibles binds
+        $values = $this->valoresInsert($datos);
+        $query .= $values['values'];
 
+        if ($onDuplicateKey) {
+            $query .= $this->getDuplicateInsert($datos);
+        }
+
+        try {
+            $stmt = $this->db->prepare($query);
+            $this->binds($stmt, $values['binds']);
+            $stmt->execute();
+            $affected = $stmt->rowCount();
+            $last_insert_id = $this->db->lastInsertId();
+            // Chequeo si hubo filas afectadas
+            if ($affected) {
+                //Hubo filas afectadas
+                if ($onDuplicateKey) {
+                    //Si es onDuplicateKey, devuelve la cantidad de filas afectadas
+                    return $affected;
+                }
+                //Si no es onDuplicateKey, devuelve el id del registro insertado
+                if ($last_insert_id) {
+                    return $last_insert_id;
+                }
+            }
+            //No hubo filas afectadas - Devuelve cero
+            return 0;
+        } catch (Exception $e) {
+            if ($_ENV["DEBUG"]) {
+                $this->logger->logError($e->getMessage());
+            }
+        }
+
+        return false;
     }
 
-    public function borrar()
+    /**
+     * Convierte el primer nivel de un array en string para insertar
+     *
+     * @param array $datos
+     * @return string
+     */
+    private function camposInsertar(array &$datos): string
+    {
+        // Obtengo las claves y valores del array y los separo
+        return "(" . join(",", array_keys($datos)) . ")";
+    }
+
+    /**
+     * Convierte los campos en la parte de "VALUES" de la query pero tambien genera los binds para despues pasarle a binds
+     *
+     * @param array $datos
+     * @return array ["values","binds"]
+     */
+    private function valoresInsert(array &$datos): array
+    {
+        $campos = array();
+        $binds = array();
+        // Obtengo las claves y valores del array y los separo
+        if ($datos) foreach ($datos as $clave => $valor) {
+            $value = $this->sentencia_campos_query($valor, $clave, false);
+            if ($value == ":$clave") {
+                $binds[$clave] = $valor;
+            }
+            $campos[] = $value;
+        }
+        return array('values' => "VALUES (" . join(",", $campos) . " )", "binds" => $binds);
+    }
+
+
+    /**
+     *
+     * Resuelvo que retornar en la sentencia del campo del query, si $update es false retorna solo el valor
+     *
+     * @param string $valor
+     * @param string $clave
+     * @param bool $update
+     * @return int|string|void
+     */
+    public function sentencia_campos_query(string &$valor, string &$clave, bool $update = true)
+    {
+        if (!empty($valor)) {
+            $valor = strtolower($valor);
+        }
+
+        switch ($valor) {
+            case "":
+            case null:
+                if ($valor === null) {
+                    // Valor null
+                    if ($update) {
+                        return "$clave = NULL";
+                    } else {
+                        return "null";
+                    }
+                } elseif ($valor === "") {
+                    // Vacio
+                    if ($update) {
+                        return "$clave = ''";
+                    } else {
+                        return "''";
+                    }
+                } elseif ($valor == 0) {
+                    // Cero (0)
+                    if ($update) {
+                        return "$clave = 0";
+                    } else {
+                        return 0;
+                    }
+                }
+                break;
+            case "_autoincrement":
+                if ($update) {
+                    return "$clave = ($clave +1 )";
+                } else {
+                    return "1";
+                }
+            case "curdate()":
+                if ($update) {
+                    return "$clave = CURDATE()";
+                } else {
+                    return "CURDATE()";
+                }
+            case "now()":
+                if ($update) {
+                    return "$clave = NOW()";
+                } else {
+                    return "NOW()";
+                }
+            default:
+                // Con datos
+                if ($update) {
+                    return "$clave = :$clave";
+                } else {
+                    return ":$clave";
+                }
+        }
+    }
+
+    /**
+     * Resuelve los binds para las sentencias preparadas
+     *
+     * @param PDOStatement $stmt
+     * @param array $datos
+     * @return int
+     */
+    private function binds(PDOStatement $stmt, array $datos): int
+    {
+        // Obtengo las claves y valores del array y los separo
+        $binds = 0;
+        if ($datos) foreach ($datos as $clave => $valor) {
+            if (is_numeric($valor)) {
+                $type = PDO::PARAM_INT;
+            } else {
+                $type = PDO::PARAM_STR;
+            }
+            $stmt->bindValue($clave, $valor, $type);
+            $binds++;
+        }
+        return $binds;
+    }
+
+    /**
+     * Resuelve la parte del "ON DUPLICATE KEY" de una query
+     *
+     * @param array $datos
+     * @return string
+     */
+    private function getDuplicateInsert(array $datos): string
+    {
+        $campos = array();
+        // Obtengo las claves y valores del array y los separo
+        if ($datos) foreach ($datos as $clave => $valor) {
+            $value = $this->sentencia_campos_query($valor, $clave);
+            $campos[] = $value;
+        }
+        return "ON DUPLICATE KEY UPDATE " . join(",", $campos);
+    }
+
+
+    public
+    function borrar()
     {
 
     }
