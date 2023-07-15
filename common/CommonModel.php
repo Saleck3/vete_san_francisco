@@ -10,7 +10,7 @@ class CommonModel
         $this->logger = new Logger();
 
         try {
-            $this->db = new PDO('mysql:host=' . _DB_HOST . ';dbname=' . _DB_NOMBRE . ';port=' . _DB_PUERTO . ';charset=' . _DB_CHARSET, _DB_USUARIO, _DB_CLAVE);
+            $this->db = new PDO('mysql:host=' . $_ENV["DB_HOST"] . ';dbname=' . $_ENV["DB_NOMBRE"] . ';port=' . $_ENV["DB_PUERTO"] . ';charset=' . $_ENV["DB_CHARSET"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"]);
         } catch (PDOException $e) {
             $this->logger->logError($e->getMessage());
             die;
@@ -60,7 +60,7 @@ class CommonModel
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-            if (_DEBUG) {
+            if ($_ENV["DEBUG"]) {
                 $this->logger->logError($e->getMessage());
             }
         }

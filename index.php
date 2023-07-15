@@ -10,24 +10,26 @@ require_once('vendor/autoload.php');
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
+$dotenv->required('DEBUG')->isBoolean();
+$_ENV["DEBUG"] = boolval($_ENV["DEBUG"]);
 
-if($_ENV["DEBUG"]){
+if ($_ENV["DEBUG"]) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 }
 
-define("_MODULO", !empty($_GET["modulo"]) ? htmlspecialchars($_GET["modulo"]): $_ENV["MODULO_DEFAULT"]);
-define("_ACCION", !empty($_GET["accion"]) ? htmlspecialchars($_GET["accion"]): $_ENV["ACCION_DEFAULT"]);
+define("_MODULO", !empty($_GET["modulo"]) ? htmlspecialchars($_GET["modulo"]) : $_ENV["MODULO_DEFAULT"]);
+define("_ACCION", !empty($_GET["accion"]) ? htmlspecialchars($_GET["accion"]) : $_ENV["ACCION_DEFAULT"]);
 
 
 $controller = ucfirst(_MODULO) . "Controller";
 $accion = _ACCION;
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonController.php" );
-require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonModel.php" );
-require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonView.php" );
-require_once($_SERVER["DOCUMENT_ROOT"] . "/common/Logger.php" );
+require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonModel.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonView.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/common/Logger.php");
 
 if (file_exists($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php")) {
     require_once($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php");
@@ -38,9 +40,9 @@ if (file_exists($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) .
 }
 
 
-if(method_exists($controller,$accion)) {
+if (method_exists($controller, $accion)) {
     $controller->$accion();
-}else{
+} else {
     require_once($_ENV["PAGINA_404"]);
     die;
 }
