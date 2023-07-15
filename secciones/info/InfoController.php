@@ -1,6 +1,6 @@
 <?php
 
-class InfoController extends \CommonController
+class InfoController extends CommonController
 {
     public function inicio()
     {

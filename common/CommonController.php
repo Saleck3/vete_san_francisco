@@ -12,7 +12,7 @@ class CommonController
     {
         $this->logger = new Logger();
 
-        if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), _PAGINAS_PERMITIDAS_SIN_LOGIN)) {
+        if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), explode(",",$_ENV["PAGINAS_PERMITIDAS_SIN_LOGIN"]))) {
             $this->redireccionarAInicio();
         }
         $this->model = $this->createModel();
@@ -26,7 +26,7 @@ class CommonController
      */
     public function estaLogueado(): bool
     {
-        return true;//TODO Reemplazar cuando se haga el login
+        return false;//TODO Reemplazar cuando se haga el login
     }
 
     /**
@@ -49,7 +49,7 @@ class CommonController
     public function esAdmin(): bool
     {
         $_SESSION["rol"] = "admin";//TODO Reemplazar cuando se haga el login
-        return $_SESSION["rol"] == _ROL_ADMIN;
+        return $_SESSION["rol"] == $_ENV["ROL_ADMIN"];
     }
 
     /**

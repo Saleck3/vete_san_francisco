@@ -1,4 +1,4 @@
-<FilesMatch ".*\.(log|ini|htaccess)$">
+<FilesMatch ".*\.(log|ini|htaccess|env)$">
     deny from all
 </FilesMatch>
 
