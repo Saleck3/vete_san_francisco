@@ -4,3 +4,4 @@ phpinfo.php
 .env
 
 config/entorno.php
+vendor
