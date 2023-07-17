@@ -19,12 +19,7 @@ if ($_ENV["DEBUG"]) {
     error_reporting(E_ALL);
 }
 
-function normalizarNombre(mixed $string)
-{
-    return ucfirst(strtolower($string));
-}
-
-define("_MODULO", !empty($_GET["modulo"]) ? normalizarNombre($_GET["modulo"]) : $_ENV["MODULO_DEFAULT"]);
+define("_MODULO", !empty($_GET["modulo"]) ? ucfirst(strtolower($_GET["modulo"])) : $_ENV["MODULO_DEFAULT"]);
 define("_ACCION", !empty($_GET["accion"]) ? htmlspecialchars($_GET["accion"]) : $_ENV["ACCION_DEFAULT"]);
 
 
@@ -46,7 +41,7 @@ if (file_exists($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) .
     require_once($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php");
     $controller = new $controller();
 } else {
-    header("Location: " . $_ENV["PAGINA_404"] . "/");
+    require_once($_ENV["PAGINA_404"]);
     die();
 }
 
@@ -54,6 +49,6 @@ if (file_exists($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) .
 if (method_exists($controller, $accion)) {
     $controller->$accion();
 } else {
-    header("Location: " . $_ENV["PAGINA_404"] . "/");
+    require_once($_ENV["PAGINA_404"]);
     die();
 }

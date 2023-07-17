@@ -32,7 +32,7 @@
             No pudimos encontrar la pagina del paciente que buscabas!<br>
             Revisa si los datos fueron ingresados correctamente.
         </p>
-        <a href="index.php" class="w3-btn w3-purple">
+        <a href="/" class="w3-btn w3-purple">
             Volver a inicio
         </a>
     </div>
