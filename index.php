@@ -20,7 +20,7 @@ if ($_ENV["DEBUG"]) {
 }
 
 define("_MODULO", !empty($_GET["modulo"]) ? ucfirst(strtolower($_GET["modulo"])) : $_ENV["MODULO_DEFAULT"]);
-define("_ACCION", !empty($_GET["accion"]) ? htmlspecialchars($_GET["accion"]) : $_ENV["ACCION_DEFAULT"]);
+define("_ACCION", !empty($_GET["accion"]) ? htmlspecialchars(strtolower($_GET["accion"])) : $_ENV["ACCION_DEFAULT"]);
 
 
 $controller = _MODULO . "Controller";
@@ -30,12 +30,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonModel.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonView.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/Logger.php");
-
-
-if(_MODULO == $_ENV["PAGINA_404"]){
-    require_once($_ENV["PAGINA_404"]);
-    die;
-}
 
 if (file_exists($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php")) {
     require_once($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php");
