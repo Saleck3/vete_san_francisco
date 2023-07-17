@@ -19,11 +19,16 @@ if ($_ENV["DEBUG"]) {
     error_reporting(E_ALL);
 }
 
-define("_MODULO", !empty($_GET["modulo"]) ? htmlspecialchars($_GET["modulo"]) : $_ENV["MODULO_DEFAULT"]);
+function normalizarNombre(mixed $string)
+{
+    return ucfirst(strtolower($string));
+}
+
+define("_MODULO", !empty($_GET["modulo"]) ? normalizarNombre($_GET["modulo"]) : $_ENV["MODULO_DEFAULT"]);
 define("_ACCION", !empty($_GET["accion"]) ? htmlspecialchars($_GET["accion"]) : $_ENV["ACCION_DEFAULT"]);
 
 
-$controller = ucfirst(_MODULO) . "Controller";
+$controller = _MODULO . "Controller";
 $accion = _ACCION;
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonController.php");
@@ -31,18 +36,24 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonModel.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/CommonView.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/common/Logger.php");
 
+
+if(_MODULO == $_ENV["PAGINA_404"]){
+    require_once($_ENV["PAGINA_404"]);
+    die;
+}
+
 if (file_exists($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php")) {
     require_once($_SERVER["DOCUMENT_ROOT"] . "secciones/" . strtolower(_MODULO) . "/$controller.php");
     $controller = new $controller();
 } else {
-    require_once($_ENV["PAGINA_404"]);
-    die;
+    header("Location: " . $_ENV["PAGINA_404"] . "/");
+    die();
 }
 
 
 if (method_exists($controller, $accion)) {
     $controller->$accion();
 } else {
-    require_once($_ENV["PAGINA_404"]);
-    die;
+    header("Location: " . $_ENV["PAGINA_404"] . "/");
+    die();
 }
