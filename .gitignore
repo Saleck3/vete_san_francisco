@@ -6,3 +6,4 @@ phpinfo.php
 config/entorno.php
 vendor
 composer.bat
+public/img
