@@ -7,3 +7,5 @@ config/entorno.php
 vendor
 composer.bat
 public/img
+.phpunit.result.cache
+.phpunit.cache/test-results
