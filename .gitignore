@@ -9,3 +9,4 @@ composer.bat
 public/img
 .phpunit.result.cache
 .phpunit.cache/test-results
+*.bkp

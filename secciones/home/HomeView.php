@@ -3,9 +3,14 @@
 class HomeView extends CommonView
 {
 
-    public function inicio(): void
+    /**
+     * Pagina de inicio de la pagina para usuarios que no esten logueados
+     *
+     * @return bool|string
+     */
+    public function inicio(): bool|string
     {
-        $this->pagina("Bienvenido a la vete! <br>");
+        return $this->pagina("Bienvenido a la vete! <br>");
     }
 
 }

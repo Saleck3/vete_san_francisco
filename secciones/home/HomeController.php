@@ -12,21 +12,11 @@ class HomeController extends CommonController
 
     public function inicio()
     {
-        if ($this->estaLogueado()) {
-            $this->homeLogueado();
-        } else {
-            $this->view->inicio();
-        }
+        echo $this->view->inicio();
     }
 
     public function homeLogueado()
     {
-
-        if (!$this->estaLogueado()) {
-            $this->inicio();
-
-        } else {
-            echo "Estas logueado! <br>";
-        }
+        echo $this->view->inicio();
     }
 }
