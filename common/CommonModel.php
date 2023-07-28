@@ -78,18 +78,50 @@ class CommonModel
         }
 
         $query = "SELECT " . $camposSelect . " FROM " . $tabla . $where;
-        $result = $this->consulta($query, $toBind);
+        $datosCrudos = $this->consulta($query, $toBind);
         if (!empty($columnaID)) {
             $resultAcomodado = array();
-            foreach ($result as $linea) {
+            foreach ($datosCrudos as $linea) {
                 $id = $linea[$columnaID];
                 unset($linea[$columnaID]);
                 $resultAcomodado[$id] = $linea;
             }
-            $result = $resultAcomodado;
+            $datosCrudos = $resultAcomodado;
         }
 
-        return $result;
+        return $datosCrudos;
+    }
+
+    /**
+     * Hace una consulta SELECT a la tabla y devuelve los datos formateados en filas y columnas
+     *
+     * @param string $tabla
+     * @param array|null $campos Si esta seteado, completa el array con los valores
+     * @param string|null $where Condiciones por las que filtrar
+     * @param array|null $toBind Array a pasar por parametro en los where
+     * @return array|null [columnas]=> Encabezados [filas] => datos
+     */
+    public function buscar_listado(string $tabla, array $campos = null, string $where = null, array $toBind = null): ?array
+    {
+        $datosCrudos = $this->buscar($tabla, $campos, $where, $toBind);
+        if (empty($datosCrudos)) return null;
+
+        $resultado["filas"] = $datosCrudos;
+        $resultado["columnas"] = array_keys($datosCrudos[0]);
+        return $resultado;
+    }
+
+    /**
+     * Convierte un array en listable
+     *
+     * @param array $datosCrudos
+     * @return array [columnas]=> Encabezados [filas] => datos
+     */
+    public function armar_listado(array $datosCrudos): array
+    {
+        $resultado["filas"] = $datosCrudos;
+        $resultado["columnas"] = array_keys($datosCrudos[0]);
+        return $resultado;
     }
 
     /**

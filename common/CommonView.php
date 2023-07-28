@@ -70,4 +70,42 @@ class CommonView
         <?php return ob_get_clean();
     }
 
+    /**
+     * Imprime una tabla en pantalla
+     *
+     * @param array $array
+     * @param $titulo
+     * @param $subtitulo
+     * @return bool|string
+     */
+    public function tabla(array $array, $titulo = "", $subtitulo = ""): bool|string
+    {
+        ob_start(); ?>
+        <div class="w3-margin-left">
+            <h1><?= $titulo ?></h1>
+            <h3><?= $subtitulo ?></h3>
+        </div>
+        <div class="w3-responsive w3-margin-top">
+            <table class="w3-table-all w3-hoverable">
+                <tr class="w3-light-blue">
+                    <?php
+                    foreach ($array["columnas"] as $columna) {
+                        echo "<th>" . ucfirst($columna) . "</th>";
+                    }
+                    ?>
+                </tr>
+                <?php
+                foreach ($array["filas"] as $fila) {
+                    echo "<tr>";
+                    foreach ($fila as $campo) {
+                        echo "<td>" . $campo . "</td>";
+                    }
+                    echo "</tr>";
+                }
+                ?>
+            </table>
+        </div>
+        <?php return $this->pagina(ob_get_clean());
+    }
+
 }
