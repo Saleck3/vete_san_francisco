@@ -21,4 +21,9 @@ class UsuariosModel extends CommonModel
         return $this->armar_listado($usuarios);
     }
 
+    public function crearUsuario(array $datos): int
+    {
+        return $this->insertar("usuarios", $datos);
+    }
+
 }

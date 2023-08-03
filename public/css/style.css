@@ -1,3 +1,19 @@
 .color-violeta {
     background-color: rgba(224, 171, 224, 0.904);
 }
+
+.mensaje-al-usuario {
+    animation-name: float;
+    -webkit-animation-name: float;
+    animation-duration: 1.5s;
+    -webkit-animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+    position: fixed;
+    top: 3em;
+    left: 3em;
+    margin-left: 1em;
+    max-width: 20em;
+    padding: 0.5em;
+    border: 1px solid white;
+}
