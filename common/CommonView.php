@@ -16,6 +16,7 @@ class CommonView
      * @param string $title Titulo de la pagina
      * @param array|null $scripsExtra array de Hrefs a scripts a agregar
      * @param array|null $estilosExtra array de Hrefs a estilos a agregar
+     *
      * @return bool|string
      */
     public function pagina(string $contenido, string $title = "Veterinaria San Francisco", array $scripsExtra = null, array $estilosExtra = null): bool|string
@@ -45,6 +46,12 @@ class CommonView
         </head>
         <body class=" color-violeta w3-border-deep-purple	">
         <?= $this->menu() ?>
+        <?php
+        if (isset($_SESSION['mensaje'])) {
+            echo $_SESSION['mensaje'];
+            unset($_SESSION['mensaje']);
+        }
+        ?>
         <div class="w3-container">
             <?= $contenido ?>
         </div>
@@ -67,6 +74,7 @@ class CommonView
             <div class="w3-bar">
                 <a class="w3-button w3-purple" href="">Buscar Paciente</a>
                 <a class="w3-button w3-purple" href="">Buscar Dueño</a>
+                <a class="w3-button w3-purple" href="/usuarios">Usuarios</a>
             </div>
         </header>
         <?php return ob_get_clean();
@@ -78,6 +86,7 @@ class CommonView
      * @param array $array
      * @param string $titulo
      * @param string $subtitulo
+     *
      * @return bool|string
      */
     public function tabla(array $array, string $titulo = "", string $subtitulo = "", $encabezado = ""): bool|string
@@ -119,6 +128,7 @@ class CommonView
      * @param string $onClick Funcion a ejecutar
      * @param string $icono clase del icono (Font Awesome)
      * @param string $claseExtra Clases extra para el link
+     *
      * @return bool|string
      */
     public function boton(string $etiqueta, string $href = "", string $onClick = "", string $icono = "", string $claseExtra = ""): bool|string
@@ -134,20 +144,40 @@ class CommonView
     }
 
     /**
+     * Imprime botones de enviar y cancelar en un form
+     *
+     * @param string $etiquetaEnviar
+     * @param string $hrefCancelar
+     * @param string $onclickCancelar
+     *
+     * @return bool|string
+     */
+    public function botones_form(string $etiquetaEnviar = "Enviar", string $valorSubmit = "Submit", string $hrefCancelar = "/" . _MODULO, string $onclickCancelar = ""): bool|string
+    {
+        ob_start(); ?>
+        <div class="w3-margin-top">
+            <?= $this->boton_submit($etiquetaEnviar, "", "w3-green", $valorSubmit, $valorSubmit); ?>
+            <?= $this->boton("Cancelar", $hrefCancelar, $onclickCancelar, "", "w3-red"); ?>
+        </div>
+        <?php return ob_get_clean();
+    }
+
+    /**
      * Genera el HTML de un boton para enviar un form
      *
      * @param string $etiqueta Texto del boton
      * @param string $icono clase del icono (Font Awesome)
      * @param string $claseExtra Clases extra para el boton
+     *
      * @return bool|string
      */
-    public function boton_submit(string $etiqueta, string $icono = "", string $claseExtra = ""): bool|string
+    public function boton_submit(string $etiqueta, string $icono = "", string $claseExtra = "", $name = "submit", $valor = "submit"): bool|string
     {
         if (!empty($icono)) {
             $icono = "<i class=\"fa $icono\"></i>";
         }
         ob_start(); ?>
-        <button type="submit" class="w3-btn w3-round <?= $claseExtra ?>" name="submit" value="submit">
+        <button type="submit" class="w3-btn w3-round <?= $claseExtra ?>" name="<?= $name ?>" value="<?= $valor ?>">
             <?= $icono . " " . $etiqueta ?>
         </button>
         <?php return ob_get_clean();
@@ -159,15 +189,42 @@ class CommonView
      * @param string $name Name y ID del elemento
      * @param string $etiqueta Label
      * @param string $placeHolder
+     * @param bool $requerido
+     *
      * @return bool|string
      */
-    public function campo_form_texto(string $name, string $etiqueta, string $placeHolder = ""): bool|string
+    public function campo_form_texto(string $name, string $etiqueta, string $placeHolder = "", bool $requerido = false): bool|string
     {
+        $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
-        <div class="w3-form"
-        <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
-        <input class="w3-input w3-border w3-round w3-margin-top" type="text" id="<?= $name ?>" name="<?= $name ?>"
-               placeholder="<?= $placeHolder ?>"><br>
+        <div class="w3-form">
+            <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
+            <input class="w3-input w3-border w3-round w3-margin-top" type="text" id="<?= $name ?>" name="<?= $name ?>"
+                   placeholder="<?= $placeHolder ?>"<?php if ($requerido) echo "required"; ?> value="<?= $valor ?>">
+            <br>
+        </div>
+        <?php return ob_get_clean();
+    }
+
+    /**
+     * Genera el HTML de un campo tipo email
+     *
+     * @param string $name
+     * @param string $etiqueta
+     * @param string $placeHolder
+     * @param bool $requerido
+     *
+     * @return bool|string
+     */
+    public function campo_form_mail(string $name = "mail", string $etiqueta = "Mail", string $placeHolder = "Ingrese mail", bool $requerido = true): bool|string
+    {
+        $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
+        ob_start(); ?>
+        <div class="w3-form">
+            <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
+            <input class="w3-input w3-border w3-round w3-margin-top" type="email" id="<?= $name ?>" name="<?= $name ?>"
+                   placeholder="<?= $placeHolder ?>"<?php if ($requerido) echo "required"; ?> value="<?= $valor ?>"><br>
+        </div>
         <?php return ob_get_clean();
     }
 
@@ -177,29 +234,84 @@ class CommonView
      * @param string $name Name y ID del elemento
      * @param string $etiqueta Label
      * @param string $placeHolder
+     * @param bool $requerido
+     *
      * @return bool|string
      */
-    public function campo_form_password(string $name, string $etiqueta, string $placeHolder = ""): bool|string
+    public function campo_form_password(string $name = "password", string $etiqueta = "Ingrese la clave", string $placeHolder = "Ingrese la clave", bool $requerido = true): bool|string
     {
+        $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
-        <div class="w3-form"
-        <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
-        <input class="w3-input w3-border w3-round w3-margin-top" type="password" id="<?= $name ?>" name="<?= $name ?>"
-               placeholder="<?= $placeHolder ?>"><br>
+        <div class="w3-form">
+            <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
+            <input class="w3-input w3-border w3-round w3-margin-top" type="password" id="<?= $name ?>"
+                   name="<?= $name ?>"
+                   placeholder="<?= $placeHolder ?>" <?php if ($requerido) echo "required"; ?>
+                   value="<?= $valor ?>"><br>
+        </div>
         <?php return ob_get_clean();
     }
 
-    public function campo_select(string $name, string $etiqueta, array $datos): bool|string
+    /**
+     * Genera el HTML de un input de tipo select
+     *
+     * @param string $name
+     * @param string $etiqueta
+     * @param array $opciones
+     * @param bool $requerido
+     *
+     * @return bool|string
+     */
+    public function campo_select(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): bool|string
     {
+        $id_checked = !empty($_POST[$name]) && !empty($id_checked) ? $_POST[$name] : $id_checked;
         ob_start(); ?>
-        <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
-        <select class="w3-input w3-border w3-round w3-margin-top w3-select" name="<?= $name ?>" id="<?= $name ?>">
-            <option disabled selected>Seleccione</option>
-            <?php foreach ($datos as $clave => $valor) {
-                echo "<option value=\"$clave\">" . ucwords($valor["nombre"]) . "</option>";
+        <div class="w3-form">
+            <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
+            <select class="w3-input w3-border w3-round w3-margin-top w3-select" name="<?= $name ?>"
+                    id="<?= $name ?>" <?php if ($requerido) echo "required"; ?>>
+                <option disabled selected>Seleccione</option>
+                <?php
+                $selected = "";
+                foreach ($opciones as $clave => $valor) {
+                    if ($clave == $id_checked) $selected = " selected";
+                    echo "<option value=\"$clave\" $selected>" . ucwords($valor) . "</option>";
+                    $selected = "";
+                } ?>
+            </select>
+        </div>
+        <?php return ob_get_clean();
+    }
+
+    /**
+     * Genera el HTML de un input de tipo select
+     *
+     * @param string $name
+     * @param string $etiqueta
+     * @param array $opciones "valor"=>"nombre"
+     * @param mixed|null $id_checked Si esta seteado, selecciona por default el id que se le pase
+     * @param bool $requerido
+     *
+     * @return string
+     */
+    public function campo_radio(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): string
+    {
+        $id_checked = !empty($_POST[$name]) && !empty($id_checked) ? $_POST[$name] : $id_checked;
+        ob_start(); ?>
+        <label><?= $etiqueta ?></label>
+        <div class="w3-form">
+
+            <?php foreach ($opciones as $id => $valor) {
+                printf('<p><input class="w3-radio" type="radio" name="%s" value="%s" %s%s><label> %s</label></p>'
+                    , $name
+                    , $id
+                    , $id == $id_checked ? "checked " : ""
+                    , $requerido ? "required " : ""
+                    , ucfirst($valor)
+                );
             } ?>
-        </select>
+
+        </div>
         <?php return ob_get_clean();
     }
-
 }
