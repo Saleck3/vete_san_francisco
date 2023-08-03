@@ -60,6 +60,7 @@ class CommonModel
      * @param string|null $where Condiciones por las que filtrar
      * @param array|null $toBind Array a pasar por parametro en los where
      * @param string|null $columnaID Nombre de la columna ID, Si se setea acomoda el array para que sea [id]=>valores
+     *
      * @return array|null
      */
     public function buscar(string $tabla, array $campos = null, string $where = null, array $toBind = null, string $columnaID = null): ?array
@@ -74,6 +75,9 @@ class CommonModel
         $camposSelect = " * ";
 
         if (!empty($campos)) {
+            if (!empty($columnaID) && !in_array($columnaID, $campos)) {
+                $campos[] = $columnaID;
+            }
             $camposSelect = implode(" ,", $campos);
         }
 
@@ -99,6 +103,7 @@ class CommonModel
      * @param array|null $campos Si esta seteado, completa el array con los valores
      * @param string|null $where Condiciones por las que filtrar
      * @param array|null $toBind Array a pasar por parametro en los where
+     *
      * @return array|null [columnas]=> Encabezados [filas] => datos
      */
     public function buscar_listado(string $tabla, array $campos = null, string $where = null, array $toBind = null): ?array
@@ -112,9 +117,35 @@ class CommonModel
     }
 
     /**
+     * Hace una consulta SELECT a la tabla y devuelve los datos formateados en filas y columnas
+     *
+     * @param string $tabla
+     * @param string|null $campo Si esta seteado, completa el array con los valores
+     * @param string|null $where Condiciones por las que filtrar
+     * @param array|null $toBind Array a pasar por parametro en los where
+     * @param string $columnaId
+     *
+     * @return array|null [columnas]=> Encabezados [filas] => datos
+     */
+    public function buscar_opciones(string $tabla, string $campo = null, string $where = null, array $toBind = null, string $columnaId = "id"): ?array
+    {
+        if (empty($campo))
+            $campo = "nombre";
+
+        $datosCrudos = $this->buscar($tabla, array($campo), $where, $toBind, $columnaId);
+        if (empty($datosCrudos)) return null;
+        $resultado = array();
+        foreach ($datosCrudos as $id => $valor) {
+            $resultado[$id] = $valor[$campo];
+        }
+        return $resultado;
+    }
+
+    /**
      * Convierte un array en listable
      *
      * @param array $datosCrudos
+     *
      * @return array [columnas]=> Encabezados [filas] => datos
      */
     public function armar_listado(array $datosCrudos): array
@@ -130,6 +161,7 @@ class CommonModel
      * @param string $tabla
      * @param array $datos
      * @param int $id
+     *
      * @return bool|int|string|null Retorna la cantidad de filas que modifico,si hay error retorna false y si no modificó retorna true
      */
     function modificar(string $tabla, array $datos, int $id): bool|int|string|null
@@ -188,9 +220,9 @@ class CommonModel
      *
      * @param string $query
      * @param array|null $toBind
-     * @return array|false|void
+     * @return array|false
      */
-    public function consulta(string $query, array $toBind = null)
+    public function consulta(string $query, array $toBind = null): bool|array
     {
         try {
             $stmt = $this->db->prepare($query);
@@ -198,12 +230,12 @@ class CommonModel
                 $this->binds($stmt, $toBind);
             }
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             if ($_ENV["DEBUG"]) {
                 $this->logger->logError($e->getMessage());
             }
         }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -217,8 +249,8 @@ class CommonModel
      * @param string $tabla
      * @param array $datos
      * @param boolean $onDuplicateKey (true|false)
+     *
      * @return integer|false (false en caso de error)
-     * @throws Exception
      * @example insert("noticias",array("denominacion"=>"Noticia","copete"=>"Copete"));
      */
     public function insertar(string $tabla, array &$datos, bool $onDuplicateKey = false): bool|int
@@ -268,6 +300,7 @@ class CommonModel
      * Convierte el primer nivel de un array en string para insertar
      *
      * @param array $datos
+     *
      * @return string
      */
     private function camposInsertar(array &$datos): string
@@ -280,6 +313,7 @@ class CommonModel
      * Convierte los campos en la parte de "VALUES" de la query pero tambien genera los binds para despues pasarle a binds
      *
      * @param array $datos
+     *
      * @return array ["values","binds"]
      */
     private function valoresInsert(array &$datos): array
@@ -299,12 +333,12 @@ class CommonModel
 
 
     /**
-     *
      * Resuelvo que retornar en la sentencia del campo del query, si $update es false retorna solo el valor
      *
      * @param string $valor
      * @param string $clave
      * @param bool $update
+     *
      * @return int|string|void
      */
     public function sentencia_campos_query(string &$valor, string &$clave, bool $update = true)
@@ -372,6 +406,7 @@ class CommonModel
      *
      * @param PDOStatement $stmt
      * @param array $datos
+     *
      * @return void
      */
     private function binds(PDOStatement $stmt, array $datos): void
@@ -391,6 +426,7 @@ class CommonModel
      * Resuelve la parte del "ON DUPLICATE KEY" de una query
      *
      * @param array $datos
+     *
      * @return string
      */
     private function getDuplicateInsert(array $datos): string
@@ -411,6 +447,7 @@ class CommonModel
      * @param string $tabla
      * @param array|int|null $id
      * @param string|null $where
+     *
      * @return bool|null TRUE si pudo eliminar FALSE si hubo un error y NULL si no se paso ningun where
      * @noinspection SqlWithoutWhere
      */
@@ -458,6 +495,7 @@ class CommonModel
      * @param mixed $campo_base_de_datos campo con el cual se comparara los valores desde hasta
      * @param mixed|null $desde valor desde el cual quieres comparar por default null
      * @param mixed|null $hasta valor hasta el cual quieres comparar por default null
+     *
      * @return string
      */
     public function where_desde_hasta(mixed $campo_base_de_datos, mixed $desde = null, mixed $hasta = null): string
@@ -483,6 +521,7 @@ class CommonModel
      * Sanitiza una variable para que sea pasable a MySQL
      *
      * @param array|string $string
+     *
      * @return void
      */
     public function escapar_mysql(array|string &$string): void

@@ -12,7 +12,7 @@ class CommonController
     {
         $this->logger = new Logger();
 
-        if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), explode(",",$_ENV["PAGINAS_PERMITIDAS_SIN_LOGIN"]))) {
+        if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), explode(",", $_ENV["PAGINAS_PERMITIDAS_SIN_LOGIN"]))) {
             $this->redireccionarAInicio();
         }
         $this->model = $this->createModel();
@@ -26,19 +26,7 @@ class CommonController
      */
     public function estaLogueado(): bool
     {
-        return false;//TODO Reemplazar cuando se haga el login
-    }
-
-    /**
-     * Redirecciona al modulo default y corta la ejecucion
-     *
-     * @return void
-     */
-
-    #[NoReturn] public function redireccionarAInicio(): void
-    {
-        header("Location: " . $_SERVER["SERVER_NAME"] . "/");
-        die();
+        return true;//TODO Reemplazar cuando se haga el login
     }
 
     /**
@@ -85,6 +73,6 @@ class CommonController
         }
         $this->inicio();
     }
-
+    
 
 }
