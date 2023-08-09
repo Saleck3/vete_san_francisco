@@ -13,7 +13,7 @@ class CommonController
         $this->logger = new Logger();
 
         if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), explode(",", $_ENV["PAGINAS_PERMITIDAS_SIN_LOGIN"]))) {
-            $this->redireccionarAInicio();
+            $this->redireccionar();
         }
         $this->model = $this->createModel();
         $this->view = $this->createView();
@@ -26,6 +26,7 @@ class CommonController
      */
     public function estaLogueado(): bool
     {
+        $_SESSION["id"] = 1;
         return true;//TODO Reemplazar cuando se haga el login
     }
 
@@ -73,6 +74,10 @@ class CommonController
         }
         $this->inicio();
     }
-    
+
+    public function inicio(): void
+    {
+        echo $this->view->pagina("", _MODULO);
+    }
 
 }

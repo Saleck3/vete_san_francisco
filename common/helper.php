@@ -39,7 +39,7 @@ use JetBrains\PhpStorm\NoReturn;
  *
  * @return void
  */
-function mensaje_al_usuario(string $mensaje, string $tipomensaje = "w3-yellow", string $icono = ""): void
+function mensajeAlUsuario(string $mensaje, string $tipomensaje = "w3-yellow", string $icono = ""): void
 {
     if ($tipomensaje == "error") {
         $tipomensaje = "w3-red";
@@ -67,7 +67,7 @@ function mensaje_al_usuario(string $mensaje, string $tipomensaje = "w3-yellow", 
  *
  * @return void
  */
-function sanitizar_valor(mixed &$valor): void
+function sanitizarValor(mixed &$valor): void
 {
     if (is_numeric($valor)) return;
     if (is_bool($valor)) return;
@@ -75,15 +75,15 @@ function sanitizar_valor(mixed &$valor): void
         $valor = htmlspecialchars(trim($valor));
 }
 
-function sanitizar_array(&$array): void
+function sanitizarArray(&$array): void
 {
     if (is_array($array)) {
         foreach ($array as &$campo) {
             if (is_array($campo)) {
-                sanitizar_array($campo);
-            } else sanitizar_valor($campo);
+                sanitizarArray($campo);
+            } else sanitizarValor($campo);
         }
-    } else sanitizar_valor($array);
+    } else sanitizarValor($array);
 }
 
 
@@ -95,9 +95,9 @@ function sanitizar_array(&$array): void
  *
  * @return bool|int
  */
-function validar_regex(string $valor, string $regex): bool|int
+function validarRegex(string $valor, string $regex): bool|int
 {
-    sanitizar_valor($valor);
+    sanitizarValor($valor);
     return preg_match($regex, $valor);
 }
 
@@ -108,8 +108,21 @@ function validar_regex(string $valor, string $regex): bool|int
  *
  * @return int|bool
  */
-function validar_mail(string $valor): int|bool
+function validarMail(string $valor): int|bool
 {
-    sanitizar_valor($valor);
+    sanitizarValor($valor);
     return filter_var($valor, FILTER_VALIDATE_EMAIL);
+}
+
+/**
+ * Valida si un valor es un numero
+ *
+ * @param int $valor
+ *
+ * @return int|bool
+ */
+function validarNumero(int $valor): int|bool
+{
+    sanitizarValor($valor);
+    return filter_var($valor, FILTER_VALIDATE_INT);
 }

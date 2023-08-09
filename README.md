@@ -20,3 +20,8 @@ Para instalar las dependencias
 Saleck [@Saleck3](https://github.com/Saleck3/vete_san_francisco)
 
 Yoritomo [@Yoritomito](https://github.com/Yoritomito)
+
+## Convenciones
+
+- Variables: snake case
+- Funciones: camel case

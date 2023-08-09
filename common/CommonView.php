@@ -86,10 +86,11 @@ class CommonView
      * @param array $array
      * @param string $titulo
      * @param string $subtitulo
+     * @param string $encabezado
      *
      * @return bool|string
      */
-    public function tabla(array $array, string $titulo = "", string $subtitulo = "", $encabezado = ""): bool|string
+    public function tabla(array $array, string $titulo = "", string $subtitulo = "", string $encabezado = ""): bool|string
     {
         ob_start(); ?>
         <div>
@@ -147,16 +148,17 @@ class CommonView
      * Imprime botones de enviar y cancelar en un form
      *
      * @param string $etiquetaEnviar
+     * @param string $valorSubmit
      * @param string $hrefCancelar
      * @param string $onclickCancelar
      *
      * @return bool|string
      */
-    public function botones_form(string $etiquetaEnviar = "Enviar", string $valorSubmit = "Submit", string $hrefCancelar = "/" . _MODULO, string $onclickCancelar = ""): bool|string
+    public function botonesForm(string $etiquetaEnviar = "Enviar", string $valorSubmit = "Submit", string $hrefCancelar = "/" . _MODULO, string $onclickCancelar = ""): bool|string
     {
         ob_start(); ?>
         <div class="w3-margin-top">
-            <?= $this->boton_submit($etiquetaEnviar, "", "w3-green", $valorSubmit, $valorSubmit); ?>
+            <?= $this->botonSubmit($etiquetaEnviar, "", "w3-green", $valorSubmit, $valorSubmit); ?>
             <?= $this->boton("Cancelar", $hrefCancelar, $onclickCancelar, "", "w3-red"); ?>
         </div>
         <?php return ob_get_clean();
@@ -171,7 +173,7 @@ class CommonView
      *
      * @return bool|string
      */
-    public function boton_submit(string $etiqueta, string $icono = "", string $claseExtra = "", $name = "submit", $valor = "submit"): bool|string
+    public function botonSubmit(string $etiqueta, string $icono = "", string $claseExtra = "", $name = "submit", $valor = "submit"): bool|string
     {
         if (!empty($icono)) {
             $icono = "<i class=\"fa $icono\"></i>";
@@ -193,7 +195,7 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campo_form_texto(string $name, string $etiqueta, string $placeHolder = "", bool $requerido = false): bool|string
+    public function campoFormTexto(string $name, string $etiqueta, string $placeHolder = "", bool $requerido = false): bool|string
     {
         $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
@@ -216,7 +218,7 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campo_form_mail(string $name = "mail", string $etiqueta = "Mail", string $placeHolder = "Ingrese mail", bool $requerido = true): bool|string
+    public function campoFormMail(string $name = "mail", string $etiqueta = "Mail", string $placeHolder = "Ingrese mail", bool $requerido = true): bool|string
     {
         $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
@@ -238,7 +240,7 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campo_form_password(string $name = "password", string $etiqueta = "Ingrese la clave", string $placeHolder = "Ingrese la clave", bool $requerido = true): bool|string
+    public function campoFormPassword(string $name = "password", string $etiqueta = "Ingrese la clave", string $placeHolder = "Ingrese la clave", bool $requerido = true): bool|string
     {
         $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
@@ -262,7 +264,7 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campo_select(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): bool|string
+    public function campoSelect(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): bool|string
     {
         $id_checked = !empty($_POST[$name]) && !empty($id_checked) ? $_POST[$name] : $id_checked;
         ob_start(); ?>
@@ -294,7 +296,7 @@ class CommonView
      *
      * @return string
      */
-    public function campo_radio(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): string
+    public function campoRadio(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): string
     {
         $id_checked = !empty($_POST[$name]) && !empty($id_checked) ? $_POST[$name] : $id_checked;
         ob_start(); ?>

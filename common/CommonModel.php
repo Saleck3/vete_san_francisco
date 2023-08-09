@@ -27,7 +27,7 @@ class CommonModel
      *
      * @return void
      */
-    public function transaction_begin(): void
+    public function transactionBegin(): void
     {
         $this->db->beginTransaction();
     }
@@ -37,7 +37,7 @@ class CommonModel
      *
      * @return void
      */
-    public function transaction_commit(): void
+    public function transactionCommit(): void
     {
         $this->db->commit();
     }
@@ -47,7 +47,7 @@ class CommonModel
      *
      * @return void
      */
-    public function transaction_rollback(): void
+    public function transactionRollback(): void
     {
         $this->db->rollback();
     }
@@ -66,8 +66,8 @@ class CommonModel
     public function buscar(string $tabla, array $campos = null, string $where = null, array $toBind = null, string $columnaID = null): ?array
     {
         if (!empty($where)) {
-            if (!str_contains($where, "where")) {
-                $where = " where " . $where;
+            if (!str_contains(strtoupper($where), "WHERE")) {
+                $where = " WHERE " . $where;
             }
         } else {
             $where = " ";
@@ -84,16 +84,21 @@ class CommonModel
         $query = "SELECT " . $camposSelect . " FROM " . $tabla . $where;
         $datosCrudos = $this->consulta($query, $toBind);
         if (!empty($columnaID)) {
-            $resultAcomodado = array();
-            foreach ($datosCrudos as $linea) {
-                $id = $linea[$columnaID];
-                unset($linea[$columnaID]);
-                $resultAcomodado[$id] = $linea;
-            }
-            $datosCrudos = $resultAcomodado;
+            $this->acomodarID($datosCrudos, $columnaID);
         }
 
         return $datosCrudos;
+    }
+
+    public function acomodarID(array &$datosCrudos, string $columnaID): void
+    {
+        $resultAcomodado = array();
+        foreach ($datosCrudos as $linea) {
+            $id = $linea[$columnaID];
+            unset($linea[$columnaID]);
+            $resultAcomodado[$id] = $linea;
+        }
+        $datosCrudos = $resultAcomodado;
     }
 
     /**
@@ -106,7 +111,7 @@ class CommonModel
      *
      * @return array|null [columnas]=> Encabezados [filas] => datos
      */
-    public function buscar_listado(string $tabla, array $campos = null, string $where = null, array $toBind = null): ?array
+    public function buscarListado(string $tabla, array $campos = null, string $where = null, array $toBind = null): ?array
     {
         $datosCrudos = $this->buscar($tabla, $campos, $where, $toBind);
         if (empty($datosCrudos)) return null;
@@ -127,7 +132,7 @@ class CommonModel
      *
      * @return array|null [columnas]=> Encabezados [filas] => datos
      */
-    public function buscar_opciones(string $tabla, string $campo = null, string $where = null, array $toBind = null, string $columnaId = "id"): ?array
+    public function buscarOpciones(string $tabla, string $campo = null, string $where = null, array $toBind = null, string $columnaId = "id"): ?array
     {
         if (empty($campo))
             $campo = "nombre";
@@ -148,10 +153,10 @@ class CommonModel
      *
      * @return array [columnas]=> Encabezados [filas] => datos
      */
-    public function armar_listado(array $datosCrudos): array
+    public function armarListado(array $datosCrudos): array
     {
         $resultado["filas"] = $datosCrudos;
-        $resultado["columnas"] = array_keys($datosCrudos[0]);
+        $resultado["columnas"] = array_keys($datosCrudos[array_key_first($datosCrudos)]);
         return $resultado;
     }
 
@@ -181,18 +186,19 @@ class CommonModel
         // Obtengo las claves y valores del array y los separo
         foreach ($datos as $clave => $valor) {
             if ($clave != "") {
-                $sentencias[] = $this->sentencia_campos_query($valor, $clave);
+                $sentencias[] = $this->sentenciaCamposQuery($valor, $clave);
             }
+            $toBind[$clave] = $valor;
         }
         $sentencias = join(",", $sentencias);
         // Creo la consulta SQL
-        $query = "UPDATE `" . $tabla . "`";
+        $query = "UPDATE " . $tabla . " ";
         $query .= "SET $sentencias ";
 
         if (!is_null($id_tbl)) {
             $query .= " WHERE id = $id_tbl";
         } else {
-            $query .= "WHERE id = '$id'";
+            $query .= "WHERE id = $id";
         }
 
         try {
@@ -203,6 +209,7 @@ class CommonModel
             $stmt->execute();
         } catch (Exception $e) {
             if ($_ENV["DEBUG"]) {
+                error_log("Query " . print_r($query, true));
                 $this->logger->logError($e->getMessage());
             }
             return false;
@@ -220,6 +227,7 @@ class CommonModel
      *
      * @param string $query
      * @param array|null $toBind
+     *
      * @return array|false
      */
     public function consulta(string $query, array $toBind = null): bool|array
@@ -322,7 +330,7 @@ class CommonModel
         $binds = array();
         // Obtengo las claves y valores del array y los separo
         if ($datos) foreach ($datos as $clave => $valor) {
-            $value = $this->sentencia_campos_query($valor, $clave, false);
+            $value = $this->sentenciaCamposQuery($valor, $clave, false);
             if ($value == ":$clave") {
                 $binds[$clave] = $valor;
             }
@@ -341,7 +349,7 @@ class CommonModel
      *
      * @return int|string|void
      */
-    public function sentencia_campos_query(string &$valor, string &$clave, bool $update = true)
+    public function sentenciaCamposQuery(string &$valor, string &$clave, bool $update = true)
     {
         if (!empty($valor)) {
             $valor = strtolower($valor);
@@ -353,21 +361,21 @@ class CommonModel
                 if ($valor === null) {
                     // Valor null
                     if ($update) {
-                        return "$clave = NULL";
+                        return "$clave = NULL ";
                     } else {
                         return "null";
                     }
                 } elseif ($valor === "") {
                     // Vacio
                     if ($update) {
-                        return "$clave = ''";
+                        return "$clave = '' ";
                     } else {
                         return "''";
                     }
                 } elseif ($valor == 0) {
                     // Cero (0)
                     if ($update) {
-                        return "$clave = 0";
+                        return "$clave = 0 ";
                     } else {
                         return 0;
                     }
@@ -375,26 +383,25 @@ class CommonModel
                 break;
             case "_autoincrement":
                 if ($update) {
-                    return "$clave = ($clave +1 )";
+                    return "$clave = ($clave +1 ) ";
                 } else {
                     return "1";
                 }
             case "curdate()":
                 if ($update) {
-                    return "$clave = CURDATE()";
+                    return "$clave = CURDATE() ";
                 } else {
-                    return "CURDATE()";
+                    return "CURDATE() ";
                 }
             case "now()":
                 if ($update) {
-                    return "$clave = NOW()";
+                    return "$clave = NOW() ";
                 } else {
-                    return "NOW()";
+                    return "NOW() ";
                 }
             default:
-                // Con datos
                 if ($update) {
-                    return "$clave = :$clave";
+                    return "$clave = :$clave ";
                 } else {
                     return ":$clave";
                 }
@@ -434,7 +441,7 @@ class CommonModel
         $campos = array();
         // Obtengo las claves y valores del array y los separo
         if ($datos) foreach ($datos as $clave => $valor) {
-            $value = $this->sentencia_campos_query($valor, $clave);
+            $value = $this->sentenciaCamposQuery($valor, $clave);
             $campos[] = $value;
         }
         return "ON DUPLICATE KEY UPDATE " . join(",", $campos);
@@ -459,26 +466,24 @@ class CommonModel
         }
 
         if (!empty($where)) {
-            if (!str_contains($where, "where")) {
-                $where = " where " . $where;
+            if (!str_contains(strtoupper($where), "WHERE")) {
+                $where = " WHERE " . $where;
             }
         } else {
             if (is_array($id)) {
-                $where = " id in (" . join(" ,", $id) . ")";
+                $where = " WHERE id IN (" . join(" ,", $id) . ")";
             } else {
-                $where = " id = $id";
+                $where = " WHERE id = $id";
             }
         }
 
         $query = "DELETE FROM " . $tabla . $where;
         try {
             $stmt = $this->db->prepare($query);
-            if (!empty($toBind)) {
-                $this->binds($stmt, $toBind);
-            }
             return $stmt->execute();
         } catch (Exception $e) {
             if ($_ENV["DEBUG"]) {
+                error_log("Query " . print_r($query, true));
                 $this->logger->logError($e->getMessage());
             }
             return false;
@@ -498,10 +503,10 @@ class CommonModel
      *
      * @return string
      */
-    public function where_desde_hasta(mixed $campo_base_de_datos, mixed $desde = null, mixed $hasta = null): string
+    public function whereDesdeHasta(mixed $campo_base_de_datos, mixed $desde = null, mixed $hasta = null): string
     {
-        $this->escapar_mysql($desde);
-        $this->escapar_mysql($hasta);
+        $this->escaparMysql($desde);
+        $this->escaparMysql($hasta);
         $where = "";
         if ($desde && $hasta && $desde != $hasta) {
             $where .= "and $campo_base_de_datos BETWEEN '" . $desde . "' and '" . $hasta . "' ";
@@ -524,11 +529,11 @@ class CommonModel
      *
      * @return void
      */
-    public function escapar_mysql(array|string &$string): void
+    public function escaparMysql(array|string &$string): void
     {
         if (is_array($string)) {
             foreach ($string as $k => $v) {
-                $this->escapar_mysql($v);
+                $this->escaparMysql($v);
                 $string[$k] = $v;
             }
         } else {
