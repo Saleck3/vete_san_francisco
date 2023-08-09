@@ -11,7 +11,7 @@ CREATE TABLE vete.usuarios (
 	id int auto_increment NOT NULL,
 	nombre varchar(50) NOT NULL,
 	mail varchar(50) NOT NULL,
-	password varchar(50) NOT NULL,
+	password varchar(60) NOT NULL,
 	matricula varchar(50) NULL,
 	rol_id INT NOT NULL,
 	CONSTRAINT usuarios_PK PRIMARY KEY (id),
