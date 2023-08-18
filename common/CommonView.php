@@ -72,9 +72,19 @@ class CommonView
         <header class="w3-container w3-center w3-deep-purple">
             <h1><a class="w3-button" href="index.php">Veterinaria San Francisco</a></h1>
             <div class="w3-bar">
-                <a class="w3-button w3-purple" href="">Buscar Paciente</a>
-                <a class="w3-button w3-purple" href="">Buscar Dueño</a>
-                <a class="w3-button w3-purple" href="/usuarios">Usuarios</a>
+                <?php if (esAdmin()) { ?>
+
+                    <a class="w3-button w3-purple" href="/usuarios">Usuarios</a>
+                <?php }
+                if (!estaLogueado()) { ?>
+
+                    <a class="w3-button w3-purple" href="/home/login">Login</a>
+                <?php } else { ?>
+
+                    <a class="w3-button w3-purple" href="">Buscar Paciente</a>
+                    <a class="w3-button w3-purple" href="">Buscar Dueño</a>
+                    <a class="w3-button w3-purple" href="/home/logout">Logout</a>
+                <?php } ?>
             </div>
         </header>
         <?php return ob_get_clean();

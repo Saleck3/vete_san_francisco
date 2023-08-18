@@ -12,33 +12,11 @@ class CommonController
     {
         $this->logger = new Logger();
 
-        if (!$this->estaLogueado() && !in_array(strtolower(_MODULO), explode(",", $_ENV["PAGINAS_PERMITIDAS_SIN_LOGIN"]))) {
-            $this->redireccionar();
+        if (!estaLogueado() && !in_array(strtolower(_MODULO), explode(",", $_ENV["PAGINAS_PERMITIDAS_SIN_LOGIN"]))) {
+            redireccionar();
         }
         $this->model = $this->createModel();
         $this->view = $this->createView();
-    }
-
-    /**
-     * Valida si el usuario inicio sesion
-     *
-     * @return bool
-     */
-    public function estaLogueado(): bool
-    {
-        $_SESSION["id"] = 1;
-        return true;//TODO Reemplazar cuando se haga el login
-    }
-
-    /**
-     * Valida si un usuario es administrador
-     *
-     * @return bool
-     */
-    public function esAdmin(): bool
-    {
-        $_SESSION["rol"] = "admin";//TODO Reemplazar cuando se haga el login
-        return $_SESSION["rol"] == $_ENV["ROL_ADMIN"];
     }
 
     /**
@@ -68,7 +46,7 @@ class CommonController
 
     public function info()
     {
-        if ($this->esAdmin()) {
+        if (esAdmin()) {
             phpinfo();
             die();
         }

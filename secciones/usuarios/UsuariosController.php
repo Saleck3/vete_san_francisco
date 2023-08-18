@@ -26,10 +26,10 @@ class UsuariosController extends CommonController
      */
     private function acciones(array &$array): void
     {
-        if ($this->esAdmin()) {
+        if (esAdmin()) {
             foreach ($array["filas"] as $id => &$fila) {
                 $fila["acciones"] = $this->view->boton("", "/" . _MODULO . "/editar?usuario_id=" . $id, "", "fa-pencil", "w3-blue");
-                if ($id != $_SESSION["id"]) {
+                if ($id != $_SESSION["usuario"]["id"]) {
                     $fila["acciones"] .= $this->view->boton("", "/" . _MODULO . "/eliminar?usuario_id=" . $id, "", "fa-trash", "w3-red");
                 }
             }
@@ -41,7 +41,7 @@ class UsuariosController extends CommonController
     {
         if (!empty($_POST["nuevoUsuario"])) {
             if ($this->controlesFormUsuario()) {
-                $_POST["password"] = password_hash($_POST["password"], PASSWORD_BCRYPT);
+                $_POST["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
                 unset($_POST["password_reintento"]);
                 unset($_POST["nuevoUsuario"]);
                 $this->model->crearUsuario($_POST);
@@ -57,7 +57,7 @@ class UsuariosController extends CommonController
     #[NoReturn] public function eliminar(): void
     {
         $id_usuario = validarNumero($_REQUEST["usuario_id"]);
-        if (!$this->esAdmin()) {
+        if (!esAdmin()) {
             mensajeAlUsuario("No tenes permisos para eliminar usuarios", "error");
         } else {
             if ($this->model->borrarUsuario($id_usuario)) {
@@ -74,11 +74,18 @@ class UsuariosController extends CommonController
         if (!empty($_POST["editarUsuario"])) {
             if ($this->controlesFormUsuario()) {
                 $usuario_id = $_POST["usuario_id"];
-                $_POST["password"] = password_hash($_POST["password"], PASSWORD_BCRYPT);
-                unset($_POST["password_reintento"]);
-                unset($_POST["editarUsuario"]);
-                unset($_POST["usuario_id"]);
-                if ($this->model->editarUsuario($_POST, $usuario_id)) {
+                $datos = array();
+
+                if (!empty($_POST["password"])) {
+                    $datos["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
+                }
+
+                $datos["nombre"] = $_POST["nombre"];
+                $datos["mail"] = $_POST["mail"];
+                $datos["matricula"] = $_POST["matricula"];
+                $datos["rol_id"] = $_POST["rol_id"];
+
+                if ($this->model->editarUsuario($datos, $usuario_id)) {
                     mensajeAlUsuario("Usuario actualizado con exito!", "exito");
                     redireccionar(_MODULO);
                 }

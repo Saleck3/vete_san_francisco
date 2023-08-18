@@ -20,7 +20,7 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * Redirecciona a una pagina puntual corta la ejecucion
  *
- * @param string $pagina
+ * @param string $pagina Default: inicio
  *
  * @return void
  */
@@ -51,7 +51,7 @@ function mensajeAlUsuario(string $mensaje, string $tipomensaje = "w3-yellow", st
     if ($tipomensaje == "warning" || $tipomensaje == "advertencia") {
         $tipomensaje = "w3-yellow";
     }
-    if(!empty($icono)) {
+    if (!empty($icono)) {
         $icono = sprintf('<i class="fa %s"></i>', $icono);
     }
 
@@ -125,4 +125,24 @@ function validarNumero(int $valor): int|bool
 {
     sanitizarValor($valor);
     return filter_var($valor, FILTER_VALIDATE_INT);
+}
+
+/**
+ * Valida si el usuario inicio sesion
+ *
+ * @return bool
+ */
+function estaLogueado(): bool
+{
+    return !empty($_SESSION) && !empty($_SESSION["usuario"]);
+}
+
+/**
+ * Valida si un usuario es administrador
+ *
+ * @return bool
+ */
+function esAdmin(): bool
+{
+    return !empty($_SESSION) && !empty($_SESSION["usuario"]) && $_SESSION["usuario"]["rol_id"] == $_ENV["ROL_ADMIN"];
 }

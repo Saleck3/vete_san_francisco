@@ -351,10 +351,6 @@ class CommonModel
      */
     public function sentenciaCamposQuery(string &$valor, string &$clave, bool $update = true)
     {
-        if (!empty($valor)) {
-            $valor = strtolower($valor);
-        }
-
         switch ($valor) {
             case "":
             case null:
@@ -425,7 +421,8 @@ class CommonModel
             } else {
                 $type = PDO::PARAM_STR;
             }
-            $stmt->bindValue($clave, $valor, $type);
+            if (!empty($valor))
+                $stmt->bindValue($clave, $valor, $type);
         }
     }
 

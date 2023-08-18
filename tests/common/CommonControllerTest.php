@@ -20,7 +20,7 @@ class CommonControllerTest extends TestCase
      */
     public function testEsAdmin(): void
     {
-        $this->assertTrue($this->controller->esAdmin());
+        $this->assertTrue(esAdmin());
         $this->assertNotNull($_SESSION["rol"]);
     }
 
@@ -30,7 +30,7 @@ class CommonControllerTest extends TestCase
      */
     public function testEstaLogueado(): void
     {
-        $logueado = $this->controller->estaLogueado();
+        $logueado = estaLogueado();
         $this->assertIsBool($logueado);
         $this->assertTrue($logueado);
     }
