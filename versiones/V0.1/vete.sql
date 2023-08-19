@@ -6,12 +6,14 @@ CREATE TABLE vete.roles (
 	nombre varchar(50) NOT NULL,
 	CONSTRAINT roles_PK PRIMARY KEY (id)
 )
+INSERT INTO vete.roles (id, nombre) VALUES(1, 'admin'),(2, 'usuario');
+
 
 CREATE TABLE vete.usuarios (
 	id int auto_increment NOT NULL,
 	nombre varchar(50) NOT NULL,
 	mail varchar(50) NOT NULL,
-	password varchar(60) NOT NULL,
+	password varchar(255) NOT NULL,
 	matricula varchar(50) NULL,
 	rol_id INT NOT NULL,
 	CONSTRAINT usuarios_PK PRIMARY KEY (id),
