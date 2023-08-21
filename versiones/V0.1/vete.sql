@@ -23,7 +23,6 @@ CREATE TABLE vete.usuarios (
 CREATE TABLE vete.duegnos (
 	id INT auto_increment NOT NULL,
 	nombre varchar(50) NOT NULL,
-	apellido varchar(50) NOT NULL,
 	numero_tel varchar(20) NULL,
 	mail varchar(50) NULL,
 	direccion varchar(100) NULL,
