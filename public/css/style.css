@@ -17,3 +17,21 @@
     padding: 0.5em;
     border: 1px solid white;
 }
+
+.menu-toggler {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+}
+
+.sidebar {
+    flex-direction: column;
+    width: 25%;
+    display: none;
+    background-color: unset !important;
+}
+
+.sidebar a {
+    left: 0;
+    margin: 0.5em;
+}

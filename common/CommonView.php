@@ -36,6 +36,7 @@ class CommonView
                     bait="If you're from Konami & see this, please do not sue us for the easter egg"></script>
             <link rel="stylesheet"
                   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <script src="/public/js/functions.js"></script>
             <?php
             if (!empty($scripsExtra)) foreach ($scripsExtra as $script) {
                 echo '<script src="' . $script . '" id="SomethingSpecial"></script>';
@@ -45,7 +46,7 @@ class CommonView
             }
             ?>
         </head>
-        <body class=" color-violeta w3-border-deep-purple	">
+        <body class=" color-violeta w3-border-deep-purple">
         <?= $this->menu() ?>
         <?php
         if (isset($_SESSION['mensaje'])) {
@@ -53,7 +54,7 @@ class CommonView
             unset($_SESSION['mensaje']);
         }
         ?>
-        <div class="w3-container">
+        <div class="w3-container" id="main" onclick="w3_close()">
             <?= $contenido ?>
         </div>
         </body>
@@ -71,23 +72,29 @@ class CommonView
     {
         ob_start(); ?>
         <header class="w3-container w3-center w3-deep-purple">
-            <h1><a class="w3-button" href="index.php">Veterinaria San Francisco</a></h1>
-            <div class="w3-bar">
+            <h1><a href="/" style="text-decoration: none;">Veterinaria San Francisco</a></h1>
+            <a class="menu-toggler" href="javascript:void(0);" onclick="w3_open()">
+                <i class="fa fa-bars"></i>
+            </a>
+            <div class="w3-sidebar sidebar" id="menu">
+                <a class="menu-toggler w3-button w3-round" href="javascript:void(0);" onclick="w3_close()">
+                    Cerrar
+                </a>
                 <?php if (esAdmin()) { ?>
-
-                    <a class="w3-button w3-purple" href="/usuarios">Usuarios</a>
+                    <a class="w3-button w3-purple w3-round" href="/usuarios">Usuarios</a>
                 <?php }
                 if (!estaLogueado()) { ?>
 
-                    <a class="w3-button w3-purple" href="/home/login">Login</a>
+                    <a class="w3-button w3-purple w3-round" href="/home/login">Login</a>
                 <?php } else { ?>
-                    <a class="w3-button w3-purple" href="/medicamentos">Medicamentos</a>
-                    <a class="w3-button w3-purple" href="">Buscar Paciente</a>
-                    <a class="w3-button w3-purple" href="/duegnos">Buscar Dueño</a>
-                    <a class="w3-button w3-purple" href="/home/logout">Logout</a>
+                    <a class="w3-button w3-purple w3-round" href="/medicamentos">Medicamentos</a>
+                    <a class="w3-button w3-purple w3-round" href="">Buscar Paciente</a>
+                    <a class="w3-button w3-purple w3-round" href="/duegnos">Buscar Dueño</a>
+                    <a class="w3-button w3-purple w3-round" href="/home/logout">Logout</a>
                 <?php } ?>
             </div>
         </header>
+
         <?php return ob_get_clean();
     }
 
