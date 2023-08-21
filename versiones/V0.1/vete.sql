@@ -19,3 +19,13 @@ CREATE TABLE vete.usuarios (
 	CONSTRAINT usuarios_PK PRIMARY KEY (id),
 	CONSTRAINT usuarios_FK FOREIGN KEY (rol_id) REFERENCES vete.roles(id)
 )
+
+CREATE TABLE vete.duegnos (
+	id INT auto_increment NOT NULL,
+	nombre varchar(50) NOT NULL,
+	apellido varchar(50) NOT NULL,
+	numero_tel varchar(20) NULL,
+	mail varchar(50) NULL,
+	direccion varchar(100) NULL,
+	CONSTRAINT duegnos_PK PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
