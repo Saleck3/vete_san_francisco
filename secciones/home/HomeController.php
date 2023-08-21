@@ -19,9 +19,7 @@ class HomeController extends CommonController
             return;
         }
         if (esAdmin()) {
-            ob_start();
-            phpinfo();
-            echo $this->view->pagina(ob_get_clean());
+            echo $this->view->pagina("");
         }
     }
 

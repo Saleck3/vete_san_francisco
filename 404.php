@@ -20,22 +20,7 @@
 <body class=" color-violeta w3-center w3-border-deep-purple	">
 
 <header class="w3-container w3-center w3-deep-purple">
-    <h1><a class="w3-button" href="index.php">Veterinaria San Francisco</a></h1>
-    <div class="w3-bar">
-        <?php if (esAdmin()) { ?>
-
-            <a class="w3-button w3-purple" href="/usuarios">Usuarios</a>
-        <?php }
-        if (!estaLogueado()) { ?>
-
-            <a class="w3-button w3-purple" href="/home/login">Login</a>
-        <?php } else { ?>
-
-            <a class="w3-button w3-purple" href="">Buscar Paciente</a>
-            <a class="w3-button w3-purple" href="/duegnos">Buscar Dueño</a>
-            <a class="w3-button w3-purple" href="/home/logout">Logout</a>
-        <?php } ?>
-    </div>
+    <h1><a href="/" style="text-decoration: none;">Veterinaria San Francisco</a></h1>
 </header>
 <div class="w3-container">
     <div class="w3-panel w3-deep-purple w3-margin-top" style="width: 50%; margin: auto;">
