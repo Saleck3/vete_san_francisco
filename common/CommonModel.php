@@ -155,6 +155,9 @@ class CommonModel
      */
     public function armarListado(array $datosCrudos): array
     {
+        if (empty($datosCrudos)) {
+            return array("filas", "columnas");
+        }
         $resultado["filas"] = $datosCrudos;
         $resultado["columnas"] = array_keys($datosCrudos[array_key_first($datosCrudos)]);
         return $resultado;

@@ -82,7 +82,7 @@ class CommonView
                 <?php } else { ?>
 
                     <a class="w3-button w3-purple" href="">Buscar Paciente</a>
-                    <a class="w3-button w3-purple" href="">Buscar Dueño</a>
+                    <a class="w3-button w3-purple" href="/duegnos">Buscar Dueño</a>
                     <a class="w3-button w3-purple" href="/home/logout">Logout</a>
                 <?php } ?>
             </div>
@@ -112,18 +112,25 @@ class CommonView
             <table class="w3-table-all w3-hoverable">
                 <tr class="w3-light-blue">
                     <?php
-                    foreach ($array["columnas"] as $columna) {
-                        echo "<th>" . ucfirst($columna) . "</th>";
+                    if (empty($array["columnas"])) {
+                        echo "<th>" . "Sin datos" . "</th>";
+
+                    } else {
+                        foreach ($array["columnas"] as $columna) {
+                            echo "<th>" . ucfirst($columna) . "</th>";
+                        }
                     }
                     ?>
                 </tr>
                 <?php
-                foreach ($array["filas"] as $fila) {
-                    echo "<tr>";
-                    foreach ($fila as $campo) {
-                        echo "<td>" . $campo . "</td>";
+                if (!empty($array["filas"])) {
+                    foreach ($array["filas"] as $fila) {
+                        echo "<tr>";
+                        foreach ($fila as $campo) {
+                            echo "<td>" . $campo . "</td>";
+                        }
+                        echo "</tr>";
                     }
-                    echo "</tr>";
                 }
                 ?>
             </table>
@@ -164,7 +171,8 @@ class CommonView
      *
      * @return bool|string
      */
-    public function botonesForm(string $etiquetaEnviar = "Enviar", string $valorSubmit = "Submit", string $hrefCancelar = "/" . _MODULO, string $onclickCancelar = ""): bool|string
+    public
+    function botonesForm(string $etiquetaEnviar = "Enviar", string $valorSubmit = "Submit", string $hrefCancelar = "/" . _MODULO, string $onclickCancelar = ""): bool|string
     {
         ob_start(); ?>
         <div class="w3-margin-top">
@@ -183,7 +191,8 @@ class CommonView
      *
      * @return bool|string
      */
-    public function botonSubmit(string $etiqueta, string $icono = "", string $claseExtra = "", $name = "submit", $valor = "submit"): bool|string
+    public
+    function botonSubmit(string $etiqueta, string $icono = "", string $claseExtra = "", $name = "submit", $valor = "submit"): bool|string
     {
         if (!empty($icono)) {
             $icono = "<i class=\"fa $icono\"></i>";
@@ -205,13 +214,15 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campoFormTexto(string $name, string $etiqueta, string $placeHolder = "", bool $requerido = false): bool|string
+    public
+    function campoFormTexto(string $name, string $etiqueta, string $placeHolder = "", bool $requerido = false): bool|string
     {
         $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
         <div class="w3-form">
             <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
-            <input class="w3-input w3-border w3-round w3-margin-top" type="text" id="<?= $name ?>" name="<?= $name ?>"
+            <input class="w3-input w3-border w3-round w3-margin-top" type="text" id="<?= $name ?>"
+                   name="<?= $name ?>"
                    placeholder="<?= $placeHolder ?>"<?php if ($requerido) echo "required"; ?> value="<?= $valor ?>">
             <br>
         </div>
@@ -228,13 +239,15 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campoFormMail(string $name = "mail", string $etiqueta = "Mail", string $placeHolder = "Ingrese mail", bool $requerido = true): bool|string
+    public
+    function campoFormMail(string $name = "mail", string $etiqueta = "Mail", string $placeHolder = "Ingrese mail", bool $requerido = true): bool|string
     {
         $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
         <div class="w3-form">
             <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
-            <input class="w3-input w3-border w3-round w3-margin-top" type="email" id="<?= $name ?>" name="<?= $name ?>"
+            <input class="w3-input w3-border w3-round w3-margin-top" type="email" id="<?= $name ?>"
+                   name="<?= $name ?>"
                    placeholder="<?= $placeHolder ?>"<?php if ($requerido) echo "required"; ?> value="<?= $valor ?>"><br>
         </div>
         <?php return ob_get_clean();
@@ -250,7 +263,8 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campoFormPassword(string $name = "password", string $etiqueta = "Ingrese la clave", string $placeHolder = "Ingrese la clave", bool $requerido = true): bool|string
+    public
+    function campoFormPassword(string $name = "password", string $etiqueta = "Ingrese la clave", string $placeHolder = "Ingrese la clave", bool $requerido = true): bool|string
     {
         $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
         ob_start(); ?>
@@ -274,7 +288,8 @@ class CommonView
      *
      * @return bool|string
      */
-    public function campoSelect(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): bool|string
+    public
+    function campoSelect(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): bool|string
     {
         $id_checked = !empty($_POST[$name]) && !empty($id_checked) ? $_POST[$name] : $id_checked;
         ob_start(); ?>
@@ -306,7 +321,8 @@ class CommonView
      *
      * @return string
      */
-    public function campoRadio(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): string
+    public
+    function campoRadio(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): string
     {
         $id_checked = !empty($_POST[$name]) && !empty($id_checked) ? $_POST[$name] : $id_checked;
         ob_start(); ?>
