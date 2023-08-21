@@ -40,11 +40,11 @@
 <div class="w3-container">
     <div class="w3-panel w3-deep-purple w3-margin-top" style="width: 50%; margin: auto;">
         <h2>
-            404 Paciente no encontrado
+            404 pagina no encontrada
         </h2>
 
         <p>
-            No pudimos encontrar la pagina del paciente que buscabas!<br>
+            No pudimos encontrar la pagina que buscabas!<br>
             Revisa si los datos fueron ingresados correctamente.
         </p>
         <a href="/" class="w3-btn w3-purple">

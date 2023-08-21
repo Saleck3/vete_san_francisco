@@ -151,12 +151,12 @@ class CommonModel
      *
      * @param array $datosCrudos
      *
-     * @return array [columnas]=> Encabezados [filas] => datos
+     * @return array|null [columnas]=> Encabezados [filas] => datos
      */
-    public function armarListado(array $datosCrudos): array
+    public function armarListado(array $datosCrudos): ?array
     {
         if (empty($datosCrudos)) {
-            return array("filas", "columnas");
+            return null;
         }
         $resultado["filas"] = $datosCrudos;
         $resultado["columnas"] = array_keys($datosCrudos[array_key_first($datosCrudos)]);
