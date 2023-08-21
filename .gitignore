@@ -11,3 +11,4 @@ public/img
 .phpunit.cache/test-results
 *.bkp
 versiones/V0.1/.$DER_vete.drawio.dtmp
+composer.lock

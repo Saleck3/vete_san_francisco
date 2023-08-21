@@ -29,3 +29,10 @@ CREATE TABLE vete.duegnos (
 	direccion varchar(100) NULL,
 	CONSTRAINT duegnos_PK PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE vete.medicamentos (
+	id INT UNSIGNED auto_increment NOT NULL,
+	nombre varchar(50) NULL,
+	presentacion varchar(50) NULL,
+	CONSTRAINT medicamentos_PK PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;

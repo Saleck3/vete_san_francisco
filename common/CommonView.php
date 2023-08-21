@@ -27,6 +27,7 @@ class CommonView
         <html lang="en">
         <head>
             <meta charset="UTF-8">
+            <link rel="icon" href="/public/assets/vete_icon.png">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title><?= $title ?></title>
             <link rel="stylesheet" href="/public/css/style.css">
@@ -80,7 +81,7 @@ class CommonView
 
                     <a class="w3-button w3-purple" href="/home/login">Login</a>
                 <?php } else { ?>
-
+                    <a class="w3-button w3-purple" href="/medicamentos">Medicamentos</a>
                     <a class="w3-button w3-purple" href="">Buscar Paciente</a>
                     <a class="w3-button w3-purple" href="/duegnos">Buscar Dueño</a>
                     <a class="w3-button w3-purple" href="/home/logout">Logout</a>
@@ -100,7 +101,7 @@ class CommonView
      *
      * @return bool|string
      */
-    public function tabla(array $array, string $titulo = "", string $subtitulo = "", string $encabezado = ""): bool|string
+    public function tabla(?array $array, string $titulo = "", string $subtitulo = "", string $encabezado = ""): bool|string
     {
         ob_start(); ?>
         <div>
@@ -112,9 +113,8 @@ class CommonView
             <table class="w3-table-all w3-hoverable">
                 <tr class="w3-light-blue">
                     <?php
-                    if (empty($array["columnas"])) {
+                    if (empty($array)) {
                         echo "<th>" . "Sin datos" . "</th>";
-
                     } else {
                         foreach ($array["columnas"] as $columna) {
                             echo "<th>" . ucfirst($columna) . "</th>";
@@ -123,7 +123,7 @@ class CommonView
                     ?>
                 </tr>
                 <?php
-                if (!empty($array["filas"])) {
+                if (!empty($array) && !empty($array["filas"])) {
                     foreach ($array["filas"] as $fila) {
                         echo "<tr>";
                         foreach ($fila as $campo) {
@@ -341,5 +341,11 @@ class CommonView
 
         </div>
         <?php return ob_get_clean();
+    }
+
+    public function campoHidden(mixed $name, mixed $value = null): string
+    {
+        $value = $value ?: $_POST[$name];
+        return "<input type=\"hidden\" name=\"$name\" value=\"" . $value . "\">";
     }
 }

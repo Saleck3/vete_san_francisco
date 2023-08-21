@@ -41,11 +41,5 @@ class UsuariosView extends CommonView
         <?php return $this->pagina(ob_get_clean());
     }
 
-    private function campoHidden(mixed $name, mixed $value = null): string
-    {
-        $value = $value ?: $_POST[$name];
-        return "<input type=\"hidden\" name=\"$name\" value=\"" . $value . "\">";
-    }
-
 
 }
