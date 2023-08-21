@@ -44,9 +44,11 @@ class UsuariosController extends CommonController
                 $_POST["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
                 unset($_POST["password_reintento"]);
                 unset($_POST["nuevoUsuario"]);
-                $this->model->crearUsuario($_POST);
-                mensajeAlUsuario("Usuario creado con exito!", "exito");
-                redireccionar(_MODULO);
+                if ($this->model->crearUsuario($_POST)) {
+                    mensajeAlUsuario("Usuario creado con exito!", "exito");
+                    redireccionar(_MODULO);
+                }
+                mensajeAlUsuario("Fallo al crear usuario", "error");
             }
         }
 
@@ -115,7 +117,7 @@ class UsuariosController extends CommonController
             $controles = false;
             mensajeAlUsuario("Las contraseñas no coinciden", "error");
         }
-        if (empty($_POST["nombre"]) || empty($_POST["mail"]) || empty($_POST["password"]) || empty($_POST["password_reintento"]) || empty($_POST["rol_id"])) {
+        if (empty($_POST["nombre"]) || empty($_POST["mail"]) || empty($_POST["rol_id"])) {
             $controles = false;
             mensajeAlUsuario("Falta un campo", "error");
         }

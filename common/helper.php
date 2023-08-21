@@ -34,7 +34,7 @@ use JetBrains\PhpStorm\NoReturn;
  * Encola un mensaje para mostrar al usuarios
  *
  * @param string $mensaje
- * @param string $tipomensaje
+ * @param string $tipomensaje "error" => rojo, "warning" / "advertencia" => amarillo, "exito" / "ok" => verde
  * @param string $icono
  *
  * @return void
