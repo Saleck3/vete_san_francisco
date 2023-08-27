@@ -6,7 +6,7 @@ class MedicamentosController extends CommonController
     {
         $medicamentos = $this->model->listado();
         $this->acciones($medicamentos);
-        $botonNuevoMedicamento = $this->view->boton("Nuevo medicamento", _MODULO . "/nuevo", "", "fa-user", "w3-blue");
+        $botonNuevoMedicamento = $this->view->boton(etiqueta: "Nuevo medicamento", href: _MODULO . "/nuevo", icono: "fa-user", claseExtra: "w3-blue");
         echo $this->view->tabla($medicamentos, "Medicamentos", "Listado de todos los medicamentos", $botonNuevoMedicamento);
     }
 
@@ -22,8 +22,8 @@ class MedicamentosController extends CommonController
         if (empty($array)) return;
         $array["columnas"][] = "acciones";
         foreach ($array["filas"] as $id => &$fila) {
-            $fila["acciones"] = $this->view->boton("", "/" . _MODULO . "/editar?medicamento_id=" . $id, "", "fa-pencil", "w3-blue");
-            $fila["acciones"] .= $this->view->boton("", "/" . _MODULO . "/eliminar?medicamento_id=" . $id, "", "fa-trash", "w3-red");
+            $fila["acciones"] = $this->view->boton(href: "/" . _MODULO . "/editar?medicamento_id=" . $id, icono: "fa-pencil", claseExtra: "w3-blue");
+            $fila["acciones"] .= $this->view->boton(href: "/" . _MODULO . "/eliminar?medicamento_id=" . $id, icono: "fa-trash", claseExtra: "w3-red");
         }
     }
 
@@ -33,7 +33,7 @@ class MedicamentosController extends CommonController
             $datos["nombre"] = $_POST["nombre"];
             $datos["presentacion"] = $_POST["presentacion"];
             $this->model->insertar("medicamentos", $datos);
-            mensajeAlUsuario("Medicamento creado con exito!", "exito");
+            mensaje_al_usuario("Medicamento creado con exito!", "exito");
             redireccionar(_MODULO);
         }
 
@@ -49,13 +49,13 @@ class MedicamentosController extends CommonController
             $datos["presentacion"] = $_POST["presentacion"];
 
             if ($this->model->modificar("medicamentos", $datos, $medicamento_id)) {
-                mensajeAlUsuario("Medicamento actualizado con exito!", "exito");
+                mensaje_al_usuario("Medicamento actualizado con exito!", "exito");
                 redireccionar(_MODULO);
             }
-            mensajeAlUsuario("No se pudo actualizar el Medicamento", "error");
+            mensaje_al_usuario("No se pudo actualizar el Medicamento", "error");
         }
 
-        $_POST = $this->model->buscar("medicamentos", null, " WHERE id = " . validarNumero($_REQUEST["medicamento_id"]))[0];
+        $_POST = $this->model->buscar(tabla: "medicamentos", where: " WHERE id = " . validarNumero($_REQUEST["medicamento_id"]))[0];
         var_dump($_POST);
         echo $this->view->editar_medicamento();
     }
@@ -64,9 +64,9 @@ class MedicamentosController extends CommonController
     {
         $medicamento_id = validarNumero($_REQUEST["medicamento_id"]);
         if ($this->model->borrar("medicamentos", $medicamento_id)) {
-            mensajeAlUsuario("Se elimino el medicamento con exito", "exito");
+            mensaje_al_usuario("Se elimino el medicamento con exito", "exito");
         } else {
-            mensajeAlUsuario("No se pudo eliminar el medicamento", "error");
+            mensaje_al_usuario("No se pudo eliminar el medicamento", "error");
         }
         redireccionar(_MODULO);
     }

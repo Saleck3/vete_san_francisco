@@ -13,7 +13,7 @@ class HomeView extends CommonView
         return $this->pagina("Bienvenido a la vete! <br>");
     }
 
-    public function login()
+    public function login(): bool|string
     {
         ob_start(); ?>
         <h1>Login</h1>

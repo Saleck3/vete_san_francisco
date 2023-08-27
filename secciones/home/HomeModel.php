@@ -3,17 +3,17 @@
 class HomeModel extends CommonModel
 {
 
-    public function login($user = null, $password = null)
+    public function login($user = null, $password = null): bool
     {
         if (empty($user) || empty($password)) {
-            mensajeAlUsuario("Error al ingresar, valide su usuario y clave", "error");
+            mensaje_al_usuario("Error al ingresar, valide su usuario y clave", "error");
             return false;
         }
 
         $datos_usuario = $this->buscar("usuarios", null, " WHERE mail = :mail", array("mail" => $user))[0];
 
         if (empty($datos_usuario) || !password_verify($password, $datos_usuario["password"])) {
-            mensajeAlUsuario("Usuario o clave invalidos", "error");
+            mensaje_al_usuario("Usuario o clave invalidos", "error");
             return false;
         }
 

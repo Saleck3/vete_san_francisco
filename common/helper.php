@@ -10,7 +10,7 @@ use JetBrains\PhpStorm\NoReturn;
  *
  * @return void
  */
-#[NoReturn] function redireccionarAInicio(): void
+#[NoReturn] function redireccionar_inicio(): void
 {
     header("Location: /");
     die();
@@ -39,7 +39,7 @@ use JetBrains\PhpStorm\NoReturn;
  *
  * @return void
  */
-function mensajeAlUsuario(string $mensaje, string $tipomensaje = "w3-yellow", string $icono = ""): void
+function mensaje_al_usuario(string $mensaje, string $tipomensaje = "w3-yellow", string $icono = ""): void
 {
     if ($tipomensaje == "error") {
         $tipomensaje = "w3-red";
@@ -67,7 +67,7 @@ function mensajeAlUsuario(string $mensaje, string $tipomensaje = "w3-yellow", st
  *
  * @return void
  */
-function sanitizarValor(mixed &$valor): void
+function sanitizar_valor(mixed &$valor): void
 {
     if (is_numeric($valor)) return;
     if (is_bool($valor)) return;
@@ -75,15 +75,15 @@ function sanitizarValor(mixed &$valor): void
         $valor = htmlspecialchars(trim($valor));
 }
 
-function sanitizarArray(&$array): void
+function sanitizar_array(&$array): void
 {
     if (is_array($array)) {
         foreach ($array as &$campo) {
             if (is_array($campo)) {
-                sanitizarArray($campo);
-            } else sanitizarValor($campo);
+                sanitizar_array($campo);
+            } else sanitizar_valor($campo);
         }
-    } else sanitizarValor($array);
+    } else sanitizar_valor($array);
 }
 
 
@@ -97,7 +97,7 @@ function sanitizarArray(&$array): void
  */
 function validarRegex(string $valor, string $regex): bool|int
 {
-    sanitizarValor($valor);
+    sanitizar_valor($valor);
     return preg_match($regex, $valor);
 }
 
@@ -110,7 +110,7 @@ function validarRegex(string $valor, string $regex): bool|int
  */
 function validarMail(string $valor): int|bool
 {
-    sanitizarValor($valor);
+    sanitizar_valor($valor);
     return filter_var($valor, FILTER_VALIDATE_EMAIL);
 }
 
@@ -123,7 +123,7 @@ function validarMail(string $valor): int|bool
  */
 function validarNumero(int $valor): int|bool
 {
-    sanitizarValor($valor);
+    sanitizar_valor($valor);
     return filter_var($valor, FILTER_VALIDATE_INT);
 }
 
