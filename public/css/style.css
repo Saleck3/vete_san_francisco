@@ -35,3 +35,8 @@
     left: 0;
     margin: 0.5em;
 }
+
+input[type=file] {
+    background-color: white;
+    color: black;
+}

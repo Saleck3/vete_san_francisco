@@ -26,14 +26,15 @@ class UsuariosView extends CommonView
         ob_start(); ?>
         <h1>Editar</h1>
 
-        <form method="post" name="editarUsuario" id="editarUsuario" class="w3-card-4 w3-padding w3-purple "
+        <form method="post" name="editarUsuario" id="editarUsuario" class="w3-card-4 w3-padding w3-purple " enctype="multipart/form-data"
               style="width: 70%; margin: auto">
             <?= $this->campoFormTexto("nombre", "Nombre y apellido", "Ingrese nombre y apellido", true); ?>
             <?= $this->campoFormMail(); ?>
             <?= $this->campoFormTexto("matricula", "Matricula (opcional)", "Ingrese la matricula"); ?>
-            <?= $this->campoFormPassword(); ?>
-            <?= $this->campoFormPassword("password_reintento", "Re ingrese clave", "Vuelva a ingresar la clave"); ?>
+            <?= $this->campoFormPassword(requerido: false); ?>
+            <?= $this->campoFormPassword("password_reintento", "Re ingrese clave", "Vuelva a ingresar la clave", false); ?>
             <?= $this->campoSelect("rol_id", "Rol", $roles, 2, true); ?>
+            <?= $this->campoArchivo("Foto de perfil", "foto_perfil"); ?>
             <?= $this->campoHidden("usuario_id", $_POST["id"]); ?>
             <?= $this->botonesForm("Editar usuario", "editarUsuario"); ?>
         </form>

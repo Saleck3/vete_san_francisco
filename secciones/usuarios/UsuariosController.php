@@ -28,9 +28,9 @@ class UsuariosController extends CommonController
     {
         if (esAdmin()) {
             foreach ($array["filas"] as $id => &$fila) {
-                $fila["acciones"] = $this->view->boton("", "/" . _MODULO . "/editar?usuario_id=" . $id, "", "fa-pencil", "w3-blue");
+                $fila["acciones"] = $this->view->boton(href: "/" . _MODULO . "/editar?usuario_id=" . $id, icono: "fa-pencil", claseExtra: "w3-blue");
                 if ($id != $_SESSION["usuario"]["id"]) {
-                    $fila["acciones"] .= $this->view->boton("", "/" . _MODULO . "/eliminar?usuario_id=" . $id, "", "fa-trash", "w3-red");
+                    $fila["acciones"] .= $this->view->boton(href: "/" . _MODULO . "/eliminar?usuario_id=" . $id, icono: "fa-trash", claseExtra: "w3-red");
                 }
             }
             $array["columnas"][] = "acciones";
@@ -45,10 +45,10 @@ class UsuariosController extends CommonController
                 unset($_POST["password_reintento"]);
                 unset($_POST["nuevoUsuario"]);
                 if ($this->model->crearUsuario($_POST)) {
-                    mensajeAlUsuario("Usuario creado con exito!", "exito");
+                    mensaje_al_usuario("Usuario creado con exito!", "exito");
                     redireccionar(_MODULO);
                 }
-                mensajeAlUsuario("Fallo al crear usuario", "error");
+                mensaje_al_usuario("Fallo al crear usuario", "error");
             }
         }
 
@@ -60,17 +60,20 @@ class UsuariosController extends CommonController
     {
         $id_usuario = validarNumero($_REQUEST["usuario_id"]);
         if (!esAdmin()) {
-            mensajeAlUsuario("No tenes permisos para eliminar usuarios", "error");
+            mensaje_al_usuario("No tenes permisos para eliminar usuarios", "error");
         } else {
             if ($this->model->borrarUsuario($id_usuario)) {
-                mensajeAlUsuario("Se elimino el usuario con exito", "exito");
+                mensaje_al_usuario("Se elimino el usuario con exito", "exito");
             } else {
-                mensajeAlUsuario("No se pudo eliminar el usuario", "error");
+                mensaje_al_usuario("No se pudo eliminar el usuario", "error");
             }
         }
         redireccionar(_MODULO);
     }
 
+    /**
+     * @throws Exception
+     */
     public function editar()
     {
         if (!empty($_POST["editarUsuario"])) {
@@ -87,11 +90,20 @@ class UsuariosController extends CommonController
                 $datos["matricula"] = $_POST["matricula"];
                 $datos["rol_id"] = $_POST["rol_id"];
 
+                if (!empty($_FILES)) {
+                    $foto_perfil = $this->archivoSubido("foto_perfil", "fotos_perfil/" . $datos["nombre"], "imagen")[0];
+                    if ($foto_perfil !== false) {
+                        $datos["imagen_perfil"] = $foto_perfil;
+                    } else {
+                        mensaje_al_usuario("Error al subir la foto de perfil");
+                    }
+                }
+
                 if ($this->model->editarUsuario($datos, $usuario_id)) {
-                    mensajeAlUsuario("Usuario actualizado con exito!", "exito");
+                    mensaje_al_usuario("Usuario actualizado con exito!", "exito");
                     redireccionar(_MODULO);
                 }
-                mensajeAlUsuario("No se pudo actualizar el usuario", "error");
+                mensaje_al_usuario("No se pudo actualizar el usuario", "error");
             }
         }
 
@@ -108,18 +120,18 @@ class UsuariosController extends CommonController
     public function controlesFormUsuario(): bool
     {
         $controles = true;
-        sanitizarArray($_POST);
+        sanitizar_array($_POST);
         if (!validarMail($_POST["mail"])) {
             $controles = false;
-            mensajeAlUsuario("El mail no es valido", "error");
+            mensaje_al_usuario("El mail no es valido", "error");
         }
         if ($_POST["password"] != $_POST["password_reintento"]) {
             $controles = false;
-            mensajeAlUsuario("Las contraseñas no coinciden", "error");
+            mensaje_al_usuario("Las contraseñas no coinciden", "error");
         }
         if (empty($_POST["nombre"]) || empty($_POST["mail"]) || empty($_POST["rol_id"])) {
             $controles = false;
-            mensajeAlUsuario("Falta un campo", "error");
+            mensaje_al_usuario("Falta un campo", "error");
         }
         return $controles;
     }

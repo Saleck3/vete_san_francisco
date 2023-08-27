@@ -56,7 +56,6 @@ class MedicamentosController extends CommonController
         }
 
         $_POST = $this->model->buscar(tabla: "medicamentos", where: " WHERE id = " . validarNumero($_REQUEST["medicamento_id"]))[0];
-        var_dump($_POST);
         echo $this->view->editar_medicamento();
     }
 

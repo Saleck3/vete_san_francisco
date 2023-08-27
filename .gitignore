@@ -6,7 +6,7 @@ phpinfo.php
 config/entorno.php
 vendor
 composer.bat
-public/img
+public/archivos
 .phpunit.result.cache
 .phpunit.cache/test-results
 *.bkp

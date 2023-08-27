@@ -27,3 +27,15 @@ CREATE TABLE vete.medicamentos (
 	presentacion varchar(50) NULL,
 	CONSTRAINT medicamentos_PK PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+ALTER TABLE vete.usuarios ADD imagen_perfil INT UNSIGNED NULL;
+ALTER TABLE vete.usuarios ADD CONSTRAINT usuarios_FK_1 FOREIGN KEY (imagen_perfil) REFERENCES vete.archivos(id);
+
+CREATE TABLE vete.archivos (
+	id INT UNSIGNED auto_increment NOT NULL,
+	nombre varchar(250) NULL,
+	path_absoluto varchar(250) NULL,
+	path_relativo varchar(250) NULL,
+	extension varchar(10) NULL,
+	CONSTRAINT archivos_PK PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;

@@ -101,7 +101,7 @@ class CommonView
     /**
      * Imprime una tabla en pantalla
      *
-     * @param array $array
+     * @param array|null $array $array
      * @param string $titulo
      * @param string $subtitulo
      * @param string $encabezado
@@ -156,7 +156,7 @@ class CommonView
      *
      * @return bool|string
      */
-    public function boton(string $etiqueta, string $href = "", string $onClick = "", string $icono = "", string $claseExtra = ""): bool|string
+    public function boton(string $etiqueta = "", string $href = "", string $onClick = "", string $icono = "", string $claseExtra = ""): bool|string
     {
         if (!empty($icono)) {
             $icono = "<i class=\"fa $icono\"></i>";
@@ -312,7 +312,7 @@ class CommonView
                     echo "<option value=\"$clave\" $selected>" . ucwords($valor) . "</option>";
                     $selected = "";
                 } ?>
-            </select>
+            </select><br>
         </div>
         <?php return ob_get_clean();
     }
@@ -354,5 +354,30 @@ class CommonView
     {
         $value = $value ?: $_POST[$name];
         return "<input type=\"hidden\" name=\"$name\" value=\"" . $value . "\">";
+    }
+
+    /**
+     * Imprime un campo input: file
+     * ATENCION: para que funcione correctamente el form tiene que tener el atributo enctype="multipart/form-data"
+     *
+     * @param string $etiqueta
+     * @param string $valorSubmit
+     * @param bool $multiple
+     * @param bool $requerido
+     *
+     * @return bool|string
+     */
+    public function campoArchivo(string $etiqueta, string $valorSubmit, bool $multiple = false, bool $requerido = false): bool|string
+    {
+        ob_start(); ?>
+        <div class="w3-form">
+            <label for="<?= $valorSubmit ?>"><?= $etiqueta ?></label>
+            <input class="w3-input w3-border w3-round w3-margin-top w3-btn w3-round" type="file"
+                   name="<?= $multiple ? $valorSubmit . "[]" : $valorSubmit ?>"
+                   id="<?= $valorSubmit ?>" <?php if ($requerido) echo "required";
+            if ($multiple) echo "multiple"; ?>
+            ><br>
+        </div>
+        <?php return ob_get_clean();
     }
 }

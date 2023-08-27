@@ -23,5 +23,4 @@ Yoritomo [@Yoritomito](https://github.com/Yoritomito)
 
 ## Convenciones
 
-- Variables: snake case
-- Funciones: camel case
+Tratemos de seguir los estandares de (PHP)[https://github.com/php/php-src/blob/master/CODING_STANDARDS.md]
