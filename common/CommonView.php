@@ -12,11 +12,10 @@ class CommonView
     /**
      * Imprime una pagina con el estilo general
      *
-     * @param string $contenido Cuerpo de la pagina,a inlcluir dentro de un w3-container
-     * @param string $title Titulo de la pagina
-     * @param array|null $scripsExtra array de Hrefs a scripts a agregar
+     * @param string     $contenido    Cuerpo de la pagina,a inlcluir dentro de un w3-container
+     * @param string     $title        Titulo de la pagina
+     * @param array|null $scripsExtra  array de Hrefs a scripts a agregar
      * @param array|null $estilosExtra array de Hrefs a estilos a agregar
-     *
      * @return bool|string
      */
     public function pagina(string $contenido, string $title = "Veterinaria San Francisco", array $scripsExtra = null, array $estilosExtra = null): bool|string
@@ -105,7 +104,6 @@ class CommonView
      * @param string $titulo
      * @param string $subtitulo
      * @param string $encabezado
-     *
      * @return bool|string
      */
     public function tabla(?array $array, string $titulo = "", string $subtitulo = "", string $encabezado = ""): bool|string
@@ -148,12 +146,11 @@ class CommonView
     /**
      * Genera el html de un boton generico
      *
-     * @param string $etiqueta Texto del boton
-     * @param string $href Link al que redirigir
-     * @param string $onClick Funcion a ejecutar
-     * @param string $icono clase del icono (Font Awesome)
+     * @param string $etiqueta   Texto del boton
+     * @param string $href       Link al que redirigir
+     * @param string $onClick    Funcion a ejecutar
+     * @param string $icono      clase del icono (Font Awesome)
      * @param string $claseExtra Clases extra para el link
-     *
      * @return bool|string
      */
     public function boton(string $etiqueta = "", string $href = "", string $onClick = "", string $icono = "", string $claseExtra = ""): bool|string
@@ -175,7 +172,6 @@ class CommonView
      * @param string $valorSubmit
      * @param string $hrefCancelar
      * @param string $onclickCancelar
-     *
      * @return bool|string
      */
     public
@@ -192,10 +188,9 @@ class CommonView
     /**
      * Genera el HTML de un boton para enviar un form
      *
-     * @param string $etiqueta Texto del boton
-     * @param string $icono clase del icono (Font Awesome)
+     * @param string $etiqueta   Texto del boton
+     * @param string $icono      clase del icono (Font Awesome)
      * @param string $claseExtra Clases extra para el boton
-     *
      * @return bool|string
      */
     public
@@ -214,17 +209,16 @@ class CommonView
     /**
      * Genera el HTML de un input de texto
      *
-     * @param string $name Name y ID del elemento
+     * @param string $name     Name y ID del elemento
      * @param string $etiqueta Label
      * @param string $placeHolder
-     * @param bool $requerido
-     *
+     * @param bool   $requerido
      * @return bool|string
      */
     public
     function campoFormTexto(string $name, string $etiqueta, string $placeHolder = "", bool $requerido = false): bool|string
     {
-        $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
+        $valor = $_POST[$name] ?? "";
         ob_start(); ?>
         <div class="w3-form">
             <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
@@ -242,14 +236,13 @@ class CommonView
      * @param string $name
      * @param string $etiqueta
      * @param string $placeHolder
-     * @param bool $requerido
-     *
+     * @param bool   $requerido
      * @return bool|string
      */
     public
     function campoFormMail(string $name = "mail", string $etiqueta = "Mail", string $placeHolder = "Ingrese mail", bool $requerido = true): bool|string
     {
-        $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
+        $valor = $_POST[$name] ?? "";
         ob_start(); ?>
         <div class="w3-form">
             <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
@@ -263,17 +256,16 @@ class CommonView
     /**
      * Genera el HTML de un input de tipo password
      *
-     * @param string $name Name y ID del elemento
+     * @param string $name     Name y ID del elemento
      * @param string $etiqueta Label
      * @param string $placeHolder
-     * @param bool $requerido
-     *
+     * @param bool   $requerido
      * @return bool|string
      */
     public
     function campoFormPassword(string $name = "password", string $etiqueta = "Ingrese la clave", string $placeHolder = "Ingrese la clave", bool $requerido = true): bool|string
     {
-        $valor = !empty($_POST[$name]) ? $_POST[$name] : "";
+        $valor = $_POST[$name] ?? "";
         ob_start(); ?>
         <div class="w3-form">
             <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
@@ -290,9 +282,8 @@ class CommonView
      *
      * @param string $name
      * @param string $etiqueta
-     * @param array $opciones
-     * @param bool $requerido
-     *
+     * @param array  $opciones
+     * @param bool   $requerido
      * @return bool|string
      */
     public
@@ -320,12 +311,11 @@ class CommonView
     /**
      * Genera el HTML de un input de tipo select
      *
-     * @param string $name
-     * @param string $etiqueta
-     * @param array $opciones "valor"=>"nombre"
+     * @param string     $name
+     * @param string     $etiqueta
+     * @param array      $opciones   "valor"=>"nombre"
      * @param mixed|null $id_checked Si esta seteado, selecciona por default el id que se le pase
-     * @param bool $requerido
-     *
+     * @param bool       $requerido
      * @return string
      */
     public
@@ -352,7 +342,7 @@ class CommonView
 
     public function campoHidden(mixed $name, mixed $value = null): string
     {
-        $value = $value ?: $_POST[$name];
+        $value = $value ?? $_POST[$name];
         return "<input type=\"hidden\" name=\"$name\" value=\"" . $value . "\">";
     }
 
