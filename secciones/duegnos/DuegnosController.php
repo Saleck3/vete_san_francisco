@@ -31,10 +31,10 @@ class DuegnosController extends CommonController
             unset($_POST["nuevoDuegno"]);
             if ($this->controlesFormDuegno()) {
                 if ($this->model->crearDuegno($_POST)) {
-                    mensajeAlUsuario("Dueño creado con exito!", "exito");
+                    mensaje_al_usuario("Dueño creado con exito!", "exito");
                     redireccionar(_MODULO);
                 }
-                mensajeAlUsuario("Fallo al crear dueño", "error");
+                mensaje_al_usuario("Fallo al crear dueño", "error");
             }
         }
 
@@ -46,9 +46,9 @@ class DuegnosController extends CommonController
         $id_duegno = validarNumero($_REQUEST["duegno_id"]);
 
         if ($this->model->borrarDuegno($id_duegno)) {
-            mensajeAlUsuario("Se elimino el dueño con exito", "exito");
+            mensaje_al_usuario("Se elimino el dueño con exito", "exito");
         } else {
-            mensajeAlUsuario("No se pudo eliminar el dueño", "error");
+            mensaje_al_usuario("No se pudo eliminar el dueño", "error");
         }
 
         redireccionar(_MODULO);
@@ -68,10 +68,10 @@ class DuegnosController extends CommonController
                 $datos["direccion"] = $_POST["direccion"];
 
                 if ($this->model->editarDuegno($datos, $duegno_id)) {
-                    mensajeAlUsuario("Dueño actualizado con exito!", "exito");
+                    mensaje_al_usuario("Dueño actualizado con exito!", "exito");
                     redireccionar(_MODULO);
                 }
-                mensajeAlUsuario("No se pudo actualizar el dueño", "error");
+                mensaje_al_usuario("No se pudo actualizar el dueño", "error");
             }
         }
         $_POST = $this->model->buscarDuegno(validarNumero($_REQUEST["duegno_id"]));
@@ -83,14 +83,14 @@ class DuegnosController extends CommonController
     public function controlesFormDuegno(): bool
     {
         $controles = true;
-        sanitizarArray($_POST);
+        sanitizar_array($_POST);
         if (!validarMail($_POST["mail"])) {
             $controles = false;
-            mensajeAlUsuario("El mail no es valido", "error");
+            mensaje_al_usuario("El mail no es valido", "error");
         }
         if (empty($_POST["nombre"]) || empty($_POST["mail"] || empty($_POST["telefono"]))) {
             $controles = false;
-            mensajeAlUsuario("Falta un campo", "error");
+            mensaje_al_usuario("Falta un campo", "error");
         }
         return $controles;
     }

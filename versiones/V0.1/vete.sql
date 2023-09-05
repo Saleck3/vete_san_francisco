@@ -2,7 +2,7 @@ CREATE
 DATABASE `vete` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 CREATE TABLE vete.roles (
-	id int auto_increment NOT NULL,
+	id INT UNSIGNED auto_increment NOT NULL,
 	nombre varchar(50) NOT NULL,
 	CONSTRAINT roles_PK PRIMARY KEY (id)
 )
@@ -10,7 +10,7 @@ INSERT INTO vete.roles (id, nombre) VALUES(1, 'admin'),(2, 'usuario');
 
 
 CREATE TABLE vete.usuarios (
-	id int auto_increment NOT NULL,
+	id INT UNSIGNED auto_increment NOT NULL,
 	nombre varchar(50) NOT NULL,
 	mail varchar(50) NOT NULL,
 	password varchar(255) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE vete.usuarios (
 )
 
 CREATE TABLE vete.duegnos (
-	id INT auto_increment NOT NULL,
+	id INT UNSIGNED auto_increment NOT NULL,
 	nombre varchar(50) NOT NULL,
 	numero_tel varchar(20) NULL,
 	mail varchar(50) NULL,
@@ -47,3 +47,34 @@ CREATE TABLE vete.archivos (
 	extension varchar(10) NULL,
 	CONSTRAINT archivos_PK PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE `especies` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE `razas` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+
+-- vete.mascotas definition
+
+CREATE TABLE `mascotas` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
+  `raza_id` int unsigned NOT NULL DEFAULT '1',
+  `especie_id` int unsigned NOT NULL DEFAULT '1',
+  `color` varchar(20) COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `peso` smallint unsigned DEFAULT NULL,
+  `fnac` date DEFAULT NULL,
+  `muerto` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mascotas_FK` (`raza_id`),
+  KEY `mascotas_FK_1` (`especie_id`),
+  CONSTRAINT `mascotas_FK` FOREIGN KEY (`raza_id`) REFERENCES `razas` (`id`),
+  CONSTRAINT `mascotas_FK_1` FOREIGN KEY (`especie_id`) REFERENCES `especies` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
