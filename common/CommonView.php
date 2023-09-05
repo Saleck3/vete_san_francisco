@@ -87,8 +87,8 @@ class CommonView
                     <a class="w3-button w3-purple w3-round" href="/home/login">Login</a>
                 <?php } else { ?>
                     <a class="w3-button w3-purple w3-round" href="/medicamentos">Medicamentos</a>
-                    <a class="w3-button w3-purple w3-round" href="">Buscar Paciente</a>
-                    <a class="w3-button w3-purple w3-round" href="/duegnos">Buscar Dueño</a>
+                    <a class="w3-button w3-purple w3-round" href="/mascotas">Mascotas</a>
+                    <a class="w3-button w3-purple w3-round" href="/duegnos">Dueños</a>
                     <a class="w3-button w3-purple w3-round" href="/home/logout">Logout</a>
                 <?php } ?>
             </div>
@@ -101,9 +101,9 @@ class CommonView
      * Imprime una tabla en pantalla
      *
      * @param array|null $array $array
-     * @param string $titulo
-     * @param string $subtitulo
-     * @param string $encabezado
+     * @param string     $titulo
+     * @param string     $subtitulo
+     * @param string     $encabezado
      * @return bool|string
      */
     public function tabla(?array $array, string $titulo = "", string $subtitulo = "", string $encabezado = ""): bool|string
@@ -280,10 +280,11 @@ class CommonView
     /**
      * Genera el HTML de un input de tipo select
      *
-     * @param string $name
-     * @param string $etiqueta
-     * @param array  $opciones
-     * @param bool   $requerido
+     * @param string     $name
+     * @param string     $etiqueta
+     * @param array      $opciones
+     * @param null|mixed $id_checked
+     * @param bool       $requerido
      * @return bool|string
      */
     public
@@ -352,9 +353,8 @@ class CommonView
      *
      * @param string $etiqueta
      * @param string $valorSubmit
-     * @param bool $multiple
-     * @param bool $requerido
-     *
+     * @param bool   $multiple
+     * @param bool   $requerido
      * @return bool|string
      */
     public function campoArchivo(string $etiqueta, string $valorSubmit, bool $multiple = false, bool $requerido = false): bool|string
@@ -367,6 +367,29 @@ class CommonView
                    id="<?= $valorSubmit ?>" <?php if ($requerido) echo "required";
             if ($multiple) echo "multiple"; ?>
             ><br>
+        </div>
+        <?php return ob_get_clean();
+    }
+
+    /**
+     * Genera el HTML de un input de fecha
+     *
+     * @param string $name     Name y ID del elemento
+     * @param string $etiqueta Label
+     * @param string $placeHolder
+     * @param bool   $requerido
+     * @return bool|string
+     */
+    public function campoFormDate(string $name, string $etiqueta, string $placeHolder = "", bool $requerido = false): bool|string
+    {
+        $valor = $_POST[$name] ?? "";
+        ob_start(); ?>
+        <div class="w3-form">
+            <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
+            <input class="w3-input w3-border w3-round w3-margin-top" type="date" id="<?= $name ?>"
+                   name="<?= $name ?>"
+                   placeholder="<?= $placeHolder ?>"<?php if ($requerido) echo "required"; ?> value="<?= $valor ?>">
+            <br>
         </div>
         <?php return ob_get_clean();
     }
