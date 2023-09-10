@@ -18,7 +18,7 @@ class CommonView
      * @param array|null $estilosExtra array de Hrefs a estilos a agregar
      * @return bool|string
      */
-    public function pagina(string $contenido, string $title = "Veterinaria San Francisco", array $scripsExtra = null, array $estilosExtra = null): bool|string
+    public function pagina(string $contenido = "", string $title = "Veterinaria San Francisco", array $scripsExtra = null, array $estilosExtra = null): bool|string
     {
         ob_start(); ?>
 

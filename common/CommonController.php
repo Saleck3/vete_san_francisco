@@ -61,13 +61,12 @@ class CommonController
     /**
      * Resuelve la subida de un archivo al filesystem
      *
-     * @param string $nombre_form
+     * @param string      $nombre_form
      * @param string|null $nombre_a_guardar
-     * @param string $formatos_aceptados
-     * @param int $tamano_maximo_MB
-     *
-     * @return bool|array
+     * @param string      $formatos_aceptados
+     * @param int         $tamano_maximo_MB
      * @throws Exception
+     * @return bool|array
      */
     public function archivoSubido(string $nombre_form, string $nombre_a_guardar = null, string $formatos_aceptados = "imagen,pdf,word", int $tamano_maximo_MB = 5): bool|array
     {
@@ -144,14 +143,13 @@ class CommonController
             }
         }
 
-        return $archivos ?: false;
+        return !empty($archivos) ? $archivos : false;
     }
 
     /**
      * Define los tipos de archivos permitidos
      *
      * @param string $tipos_archivo_permitidos
-     *
      * @return array|string[]
      */
     public function tiposArchivoSegunMime(string $tipos_archivo_permitidos): array

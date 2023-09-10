@@ -21,7 +21,6 @@ class UsuariosController extends CommonController
      * Agrega la columna de acciones
      *
      * @param array $array
-     *
      * @return void
      */
     private function acciones(array &$array): void
@@ -37,6 +36,9 @@ class UsuariosController extends CommonController
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function nuevo(): void
     {
         if (!empty($_POST["nuevoUsuario"])) {
@@ -44,6 +46,14 @@ class UsuariosController extends CommonController
                 $_POST["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
                 unset($_POST["password_reintento"]);
                 unset($_POST["nuevoUsuario"]);
+                if (!empty($_FILES) and !empty($_FILES["name"])) {
+                    $foto_perfil = $this->archivoSubido("foto_perfil", "fotos_perfil/" . $_POST["nombre"], "imagen")[0];
+                    if ($foto_perfil !== false) {
+                        $_POST["imagen_perfil"] = $foto_perfil;
+                    } else {
+                        mensaje_al_usuario("Error al subir la foto de perfil");
+                    }
+                }
                 if ($this->model->crearUsuario($_POST)) {
                     mensaje_al_usuario("Usuario creado con exito!", "exito");
                     redireccionar(_MODULO);
@@ -90,7 +100,7 @@ class UsuariosController extends CommonController
                 $datos["matricula"] = $_POST["matricula"];
                 $datos["rol_id"] = $_POST["rol_id"];
 
-                if (!empty($_FILES)) {
+                if (!empty($_FILES) and !empty($_FILES["name"])) {
                     $foto_perfil = $this->archivoSubido("foto_perfil", "fotos_perfil/" . $datos["nombre"], "imagen")[0];
                     if ($foto_perfil !== false) {
                         $datos["imagen_perfil"] = $foto_perfil;

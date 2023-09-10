@@ -18,9 +18,7 @@ class HomeController extends CommonController
             echo $this->view->login();
             return;
         }
-        if (esAdmin()) {
-            echo $this->view->pagina("");
-        }
+        echo $this->view->pagina();
     }
 
     public function login(): void
