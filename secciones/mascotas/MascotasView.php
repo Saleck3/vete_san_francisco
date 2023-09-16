@@ -33,8 +33,8 @@ class MascotasView extends CommonView
               style="width: 70%; margin: auto">
 
             <?= $this->campoFormTexto("nombre", "Nombre", "Ingrese nombre de la mascota", true); ?>
-            <?= $this->campoSelect("raza_id", "Raza", $raza, 2, true); ?>
-            <?= $this->campoSelect("especie_id", "Especie", $especie, 2, true); ?>
+            <?= $this->campoSelect("raza_id", "Raza", $raza, null, true); ?>
+            <?= $this->campoSelect("especie_id", "Especie", $especie, null, true); ?>
             <?= $this->campoFormTexto("color", "Color (opcional)", "Ingrese el color"); ?>
             <?= $this->campoFormTexto("peso", "Peso (opcional)", "Ingrese el peso"); ?>
             <?=$this->campoFormDate("fnac", "Fecha de Nacimiento", "Ingrese la fecha")?>

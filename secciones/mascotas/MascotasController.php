@@ -20,7 +20,7 @@ class MascotasController extends CommonController
         foreach ($datos["filas"] as $id => &$fila) {
             $fila["acciones"] = $this->view->boton("", "/" . _MODULO . "/editar?mascota_id=" . $id, "", "fa-pencil", "w3-blue");
             $fila["acciones"] .= $this->view->boton("", "/" . _MODULO . "/eliminar?mascota_id=" . $id, "", "fa-trash", "w3-red");
-            $fila["muerto"] = $fila["muerto"] ?  'muerto':'vivo';
+            $fila["muerto"] = $fila["muerto"] ? 'muerto' : 'vivo';
         }
         $datos["columnas"][] = "acciones";
 
@@ -71,8 +71,7 @@ class MascotasController extends CommonController
                 $datos["color"] = $_POST["color"];
                 $datos["peso"] = $_POST["peso"];
                 $datos["fnac"] = $_POST["fnac"];
-                $datos["muerto"] = !empty($_POST["muerto"]);
-
+                $datos["muerto"] = !empty($_POST["muerto"]) ? 1 : 0;
 
 
                 if ($this->model->editarMascota($datos, $mascota_id)) {

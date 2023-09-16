@@ -55,12 +55,11 @@ class CommonModel
     /**
      * Hace una consulta SELECT a la tabla
      *
-     * @param string $tabla
-     * @param array|null $campos Si esta seteado, completa el array con los valores
-     * @param string|null $where Condiciones por las que filtrar
-     * @param array|null $toBind Array a pasar por parametro en los where
+     * @param string      $tabla
+     * @param array|null  $campos    Si esta seteado, completa el array con los valores
+     * @param string|null $where     Condiciones por las que filtrar
+     * @param array|null  $toBind    Array a pasar por parametro en los where
      * @param string|null $columnaID Nombre de la columna ID, Si se setea acomoda el array para que sea [id]=>valores
-     *
      * @return array|null
      */
     public function buscar(string $tabla, array $campos = null, string $where = null, array $toBind = null, string $columnaID = null): ?array
@@ -104,11 +103,10 @@ class CommonModel
     /**
      * Hace una consulta SELECT a la tabla y devuelve los datos formateados en filas y columnas
      *
-     * @param string $tabla
-     * @param array|null $campos Si esta seteado, completa el array con los valores
-     * @param string|null $where Condiciones por las que filtrar
-     * @param array|null $toBind Array a pasar por parametro en los where
-     *
+     * @param string      $tabla
+     * @param array|null  $campos Si esta seteado, completa el array con los valores
+     * @param string|null $where  Condiciones por las que filtrar
+     * @param array|null  $toBind Array a pasar por parametro en los where
      * @return array|null [columnas]=> Encabezados [filas] => datos
      */
     public function buscarListado(string $tabla, array $campos = null, string $where = null, array $toBind = null): ?array
@@ -124,12 +122,11 @@ class CommonModel
     /**
      * Hace una consulta SELECT a la tabla y devuelve los datos formateados en filas y columnas
      *
-     * @param string $tabla
-     * @param string|null $campo Si esta seteado, completa el array con los valores
-     * @param string|null $where Condiciones por las que filtrar
-     * @param array|null $toBind Array a pasar por parametro en los where
-     * @param string $columnaId
-     *
+     * @param string      $tabla
+     * @param string|null $campo  Si esta seteado, completa el array con los valores
+     * @param string|null $where  Condiciones por las que filtrar
+     * @param array|null  $toBind Array a pasar por parametro en los where
+     * @param string      $columnaId
      * @return array|null [columnas]=> Encabezados [filas] => datos
      */
     public function buscarOpciones(string $tabla, string $campo = null, string $where = null, array $toBind = null, string $columnaId = "id"): ?array
@@ -150,7 +147,6 @@ class CommonModel
      * Convierte un array en listable
      *
      * @param array $datosCrudos
-     *
      * @return array|null [columnas]=> Encabezados [filas] => datos
      */
     public function armarListado(array $datosCrudos): ?array
@@ -167,9 +163,8 @@ class CommonModel
      * Modifica un registro en la base
      *
      * @param string $tabla
-     * @param array $datos
-     * @param int $id
-     *
+     * @param array  $datos
+     * @param int    $id
      * @return bool|int|string|null Retorna la cantidad de filas que modifico,si hay error retorna false y si no modificó retorna true
      */
     function modificar(string $tabla, array $datos, int $id): bool|int|string|null
@@ -228,9 +223,8 @@ class CommonModel
     /**
      * Ejecuta una consulta base
      *
-     * @param string $query
+     * @param string     $query
      * @param array|null $toBind
-     *
      * @return array|false
      */
     public function consulta(string $query, array $toBind = null): bool|array
@@ -257,10 +251,9 @@ class CommonModel
      * Si no se realizaron cambios, devuelve 0.
      * Si ocurrieron errores, devuelve false.
      *
-     * @param string $tabla
-     * @param array $datos
+     * @param string  $tabla
+     * @param array   $datos
      * @param boolean $onDuplicateKey (true|false)
-     *
      * @return integer|false (false en caso de error)
      * @example insert("noticias",array("denominacion"=>"Noticia","copete"=>"Copete"));
      */
@@ -311,7 +304,6 @@ class CommonModel
      * Convierte el primer nivel de un array en string para insertar
      *
      * @param array $datos
-     *
      * @return string
      */
     private function camposInsertar(array &$datos): string
@@ -324,7 +316,6 @@ class CommonModel
      * Convierte los campos en la parte de "VALUES" de la query pero tambien genera los binds para despues pasarle a binds
      *
      * @param array $datos
-     *
      * @return array ["values","binds"]
      */
     private function valoresInsert(array &$datos): array
@@ -348,8 +339,7 @@ class CommonModel
      *
      * @param string $valor
      * @param string $clave
-     * @param bool $update
-     *
+     * @param bool   $update
      * @return int|string|void
      */
     public function sentenciaCamposQuery(string &$valor, string &$clave, bool $update = true)
@@ -411,8 +401,7 @@ class CommonModel
      * Resuelve los binds para las sentencias preparadas
      *
      * @param PDOStatement $stmt
-     * @param array $datos
-     *
+     * @param array        $datos
      * @return void
      */
     private function binds(PDOStatement $stmt, array $datos): void
@@ -424,8 +413,7 @@ class CommonModel
             } else {
                 $type = PDO::PARAM_STR;
             }
-            if (!empty($valor))
-                $stmt->bindValue($clave, $valor, $type);
+            $stmt->bindValue($clave, $valor, $type);
         }
     }
 
@@ -433,7 +421,6 @@ class CommonModel
      * Resuelve la parte del "ON DUPLICATE KEY" de una query
      *
      * @param array $datos
-     *
      * @return string
      */
     private function getDuplicateInsert(array $datos): string
@@ -451,10 +438,9 @@ class CommonModel
     /**
      * Elimina los elementos de una tabla
      *
-     * @param string $tabla
+     * @param string         $tabla
      * @param array|int|null $id
-     * @param string|null $where
-     *
+     * @param string|null    $where
      * @return bool|null TRUE si pudo eliminar FALSE si hubo un error y NULL si no se paso ningun where
      * @noinspection SqlWithoutWhere
      */
@@ -497,10 +483,9 @@ class CommonModel
      * devolvera el where con el between entre ambos, si se pasa solo el campo hasta devolvera para que filtre por los menores
      * de ese valor, si se pasa solo desde se devolvera para que filtre por los valores mayores a ese valor.
      *
-     * @param mixed $campo_base_de_datos campo con el cual se comparara los valores desde hasta
-     * @param mixed|null $desde valor desde el cual quieres comparar por default null
-     * @param mixed|null $hasta valor hasta el cual quieres comparar por default null
-     *
+     * @param mixed      $campo_base_de_datos campo con el cual se comparara los valores desde hasta
+     * @param mixed|null $desde               valor desde el cual quieres comparar por default null
+     * @param mixed|null $hasta               valor hasta el cual quieres comparar por default null
      * @return string
      */
     public function whereDesdeHasta(mixed $campo_base_de_datos, mixed $desde = null, mixed $hasta = null): string
@@ -526,7 +511,6 @@ class CommonModel
      * Sanitiza una variable para que sea pasable a MySQL
      *
      * @param array|string $string
-     *
      * @return void
      */
     public function escaparMysql(array|string &$string): void

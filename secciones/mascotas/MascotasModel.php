@@ -41,7 +41,7 @@ class MascotasModel extends CommonModel
 
     public function buscarMascota(int $mascota_id): ?array
     {
-        return $this->buscar("mascotas", array("id", "nombre", "nombre", "nombre", "color", "peso", "fnac", "muerto"), " WHERE id = $mascota_id")[0];
+        return $this->buscar("mascotas", array("id", "nombre", "raza_id", "especie_id", "color", "peso", "fnac", "muerto"), " WHERE id = $mascota_id")[0];
     }
 
     public function editarMascota(array $datos, int $mascota_id): int

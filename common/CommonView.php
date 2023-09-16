@@ -290,7 +290,7 @@ class CommonView
     public
     function campoSelect(string $name, string $etiqueta, array $opciones, mixed $id_checked = null, bool $requerido = false): bool|string
     {
-        $id_checked = !empty($_POST[$name]) && !empty($id_checked) ? $_POST[$name] : $id_checked;
+        $id_checked = $_POST[$name] ?? $id_checked;
         ob_start(); ?>
         <div class="w3-form">
             <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
@@ -393,14 +393,15 @@ class CommonView
         </div>
         <?php return ob_get_clean();
     }
+
     public
     function campoFormCheck(string $name, string $etiqueta, bool $requerido = false): bool|string
     {
-        $valor = $_POST[$name] ?? "";
+        $checked = $_POST[$name] ? "checked" : "";
         ob_start(); ?>
         <div class="w3-form">
             <label for="<?= $name ?>"><?= $etiqueta ?></label><br>
-            <input class="w3-input w3-border w3-round w3-margin-top" type="checkbox" id="<?= $name ?>"
+            <input class="w3-input w3-border w3-round w3-margin-top" type="checkbox" id="<?= $name ?>" <?= $checked ?>
                    name="<?= $name ?>"/>
 
             <br>
