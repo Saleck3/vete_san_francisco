@@ -6,7 +6,6 @@ class MascotasController extends CommonController
 {
     public function inicio(): void
     {
-        var_dump(_MODULO);
         $mascotas = $this->model->listado();
         $this->acciones($mascotas);
         $botonNuevaMascota = $this->view->boton("Nueva mascota", _MODULO . "/nuevo", "", "fa-user", "w3-blue");
@@ -21,6 +20,7 @@ class MascotasController extends CommonController
         foreach ($datos["filas"] as $id => &$fila) {
             $fila["acciones"] = $this->view->boton("", "/" . _MODULO . "/editar?mascota_id=" . $id, "", "fa-pencil", "w3-blue");
             $fila["acciones"] .= $this->view->boton("", "/" . _MODULO . "/eliminar?mascota_id=" . $id, "", "fa-trash", "w3-red");
+            $fila["muerto"] = $fila["muerto"] ?  'muerto':'vivo';
         }
         $datos["columnas"][] = "acciones";
 
@@ -41,7 +41,6 @@ class MascotasController extends CommonController
 
         $raza = $this->model->buscarOpciones("razas", "nombre");
         $especie = $this->model->buscarOpciones("especies", "nombre");
-
         echo $this->view->nueva_mascota($raza, $especie);
     }
 
@@ -64,12 +63,17 @@ class MascotasController extends CommonController
             if ($this->controlesFormMascota()) {
                 $mascota_id = $_POST["mascota_id"];
                 $datos = array();
+                var_dump($_POST);
 
                 $datos["nombre"] = $_POST["nombre"];
+                $datos["raza_id"] = $_POST["raza_id"];
+                $datos["especie_id"] = $_POST["especie_id"];
                 $datos["color"] = $_POST["color"];
                 $datos["peso"] = $_POST["peso"];
                 $datos["fnac"] = $_POST["fnac"];
-                $datos["muerto"] = $_POST["muerto"];
+                $datos["muerto"] = !empty($_POST["muerto"]);
+
+
 
                 if ($this->model->editarMascota($datos, $mascota_id)) {
                     mensaje_al_usuario("Mascota actualizada con exito!", "exito");
@@ -79,7 +83,9 @@ class MascotasController extends CommonController
             }
         }
         $_POST = $this->model->buscarMascota(validarNumero($_REQUEST["mascota_id"]));
-        echo $this->view->editar();
+        $raza = $this->model->buscarOpciones("razas", "nombre");
+        $especie = $this->model->buscarOpciones("especies", "nombre");
+        echo $this->view->editar($raza, $especie);
 
     }
 

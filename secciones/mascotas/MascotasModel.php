@@ -16,7 +16,7 @@ class MascotasModel extends CommonModel
                 ,m.muerto
             FROM mascotas m
                 INNER JOIN razas r ON m.raza_id = r.id
-                INNER JOIN especies e ON m.raza_id = e.id";
+                INNER JOIN especies e ON m.especie_id = e.id";
 
 
         $mascotas = $this->consulta($sql);
