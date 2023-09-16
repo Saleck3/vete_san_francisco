@@ -46,3 +46,34 @@ CREATE TABLE vete.archivos (
 
 ALTER TABLE vete.usuarios ADD imagen_perfil INT UNSIGNED NULL;
 ALTER TABLE vete.usuarios ADD CONSTRAINT usuarios_FK_1 FOREIGN KEY (imagen_perfil) REFERENCES vete.archivos(id);
+
+CREATE TABLE `especies` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE `razas` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+
+-- vete.mascotas definition
+
+CREATE TABLE `mascotas` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
+  `raza_id` int unsigned NOT NULL DEFAULT '1',
+  `especie_id` int unsigned NOT NULL DEFAULT '1',
+  `color` varchar(20) COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `peso` smallint unsigned DEFAULT NULL,
+  `fnac` date DEFAULT NULL,
+  `muerto` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mascotas_FK` (`raza_id`),
+  KEY `mascotas_FK_1` (`especie_id`),
+  CONSTRAINT `mascotas_FK` FOREIGN KEY (`raza_id`) REFERENCES `razas` (`id`),
+  CONSTRAINT `mascotas_FK_1` FOREIGN KEY (`especie_id`) REFERENCES `especies` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
