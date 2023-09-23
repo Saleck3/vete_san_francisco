@@ -14,11 +14,10 @@ class MascotasView extends CommonView
             <?= $this->campoSelect("especie_id", "Especie", $especie, 2, true); ?>
             <?= $this->campoFormTexto("color", "Color (opcional)", "Ingrese el color"); ?>
             <?= $this->campoFormTexto("peso", "Peso (opcional)", "Ingrese el peso"); ?>
-            <?=$this->campoFormDate("fnac", "Fecha de Nacimiento", "Ingrese la fecha")?>
+            <?= $this->campoFormDate("fnac", "Fecha de Nacimiento", "Ingrese la fecha") ?>
 
             <?= $this->botonesForm("Crear mascota", "nuevaMascota"); ?>
         </form>
-
 
 
         <?php return $this->pagina(ob_get_clean());
@@ -37,8 +36,8 @@ class MascotasView extends CommonView
             <?= $this->campoSelect("especie_id", "Especie", $especie, null, true); ?>
             <?= $this->campoFormTexto("color", "Color (opcional)", "Ingrese el color"); ?>
             <?= $this->campoFormTexto("peso", "Peso (opcional)", "Ingrese el peso"); ?>
-            <?=$this->campoFormDate("fnac", "Fecha de Nacimiento", "Ingrese la fecha")?>
-            <?=$this->campoFormCheck("muerto", "Murió?")?>
+            <?= $this->campoFormDate("fnac", "Fecha de Nacimiento", "Ingrese la fecha") ?>
+            <?= $this->campoFormCheck("muerto", "Murió?") ?>
 
             <?= $this->campoHidden("mascota_id", $_POST["id"]); ?>
 
@@ -50,5 +49,24 @@ class MascotasView extends CommonView
         <?php return $this->pagina(ob_get_clean());
     }
 
+    public function ficha(array $datosMascota): bool|string
+    {
+        ob_start(); ?>
+        <div class="w3-container">
+            <div name="datos" id="datos"
+                 class="w3-panel w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-round-xlarge w3-border-deep-purple">
+                <h1><?= ucfirst($datosMascota["nombre"]) ?></h1>
+                <div>
+                    <?php
+
+                    foreach ($datosMascota as $nombre => $dato) {
+            
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php return $this->pagina(ob_get_clean());
+    }
 }
 

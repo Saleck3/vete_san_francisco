@@ -18,7 +18,8 @@ class MascotasController extends CommonController
             return;
         }
         foreach ($datos["filas"] as $id => &$fila) {
-            $fila["acciones"] = $this->view->boton("", "/" . _MODULO . "/editar?mascota_id=" . $id, "", "fa-pencil", "w3-blue");
+            $fila["acciones"] = $this->view->boton("", "/" . _MODULO . "/ficha?mascota_id=" . $id, "", "fa-eye", "w3-green");
+            $fila["acciones"] .= $this->view->boton("", "/" . _MODULO . "/editar?mascota_id=" . $id, "", "fa-pencil", "w3-blue");
             $fila["acciones"] .= $this->view->boton("", "/" . _MODULO . "/eliminar?mascota_id=" . $id, "", "fa-trash", "w3-red");
             $fila["muerto"] = $fila["muerto"] ? 'muerto' : 'vivo';
         }
@@ -98,6 +99,12 @@ class MascotasController extends CommonController
             mensaje_al_usuario("Falta un campo", "error");
         }
         return $controles;
+    }
+
+    public function ficha()
+    {
+        $datosMascota = $this->model->buscarMascota(validarNumero($_REQUEST["mascota_id"]));
+        echo $this->view->ficha($datosMascota);
     }
 
 }

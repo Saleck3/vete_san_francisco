@@ -77,3 +77,24 @@ CREATE TABLE `mascotas` (
   CONSTRAINT `mascotas_FK` FOREIGN KEY (`raza_id`) REFERENCES `razas` (`id`),
   CONSTRAINT `mascotas_FK_1` FOREIGN KEY (`especie_id`) REFERENCES `especies` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE vete.fichas (
+	id INT UNSIGNED auto_increment NOT NULL,
+	mascota_id INT UNSIGNED NOT NULL,
+	fcreado DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	fmodificado DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	descripcion TEXT NULL,
+	usuario_id INT UNSIGNED NOT NULL,
+	CONSTRAINT fichas_PK PRIMARY KEY (id),
+	CONSTRAINT fichas_FK FOREIGN KEY (mascota_id) REFERENCES vete.mascotas(id),
+	CONSTRAINT fichas_FK_1 FOREIGN KEY (usuario_id) REFERENCES vete.usuarios(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE vete.ficha_archivo (
+	id INT UNSIGNED auto_increment NOT NULL,
+	ficha_id INT UNSIGNED NOT NULL,
+	archivo_id INT UNSIGNED NOT NULL,
+	CONSTRAINT ficha_archivo_PK PRIMARY KEY (id),
+	CONSTRAINT ficha_archivo_FK FOREIGN KEY (ficha_id) REFERENCES vete.fichas(id),
+	CONSTRAINT ficha_archivo_FK_1 FOREIGN KEY (archivo_id) REFERENCES vete.archivos(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
